@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mstd-self-motion"
+version = "0.2.0"
+description = "Auditable Python MT-MSTd reference model with a C++ V1 interchange contract"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.scripts]
+mstd = "mstd.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
