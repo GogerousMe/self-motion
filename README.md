@@ -9,6 +9,7 @@ Python 为开发主体；通过离线数值接口对接现有 C++/CUDA MotionEne
 - [本机实际验证记录](docs/VALIDATION.md)
 - [CARLsim 脉冲 DAT 接入](docs/CARLSIM_IMPORT.md)
 - [Linux 方向校准采集流程](docs/CALIBRATION.md)
+- [自运动刺激：前进、后退与曲线路径](docs/SELFMOTION_STIMULI.md)
 
 ## 快速运行
 
@@ -43,3 +44,5 @@ Python 是模型主体，保留修改版C++ V1。接入真实DAT只证明接口�
 原始DAT、二进制实验输出与本机数据均不上传；测试使用临时生成的小型夹具。
 
 v0.3 新增 `generate-calibration` 与 `analyze-calibration`：生成八方向光栅／纹理刺激，并对真实V1响应输出方向误差及滤波器活动报告。缺少响应时明确标为pending；Linux采集流程见上面的说明。
+
+v0.4 新增 `generate-selfmotion --output outputs/selfmotion_01 --video`：在静态三维点云／地面点阵中模拟相机运动，导出真实图像AVI、V1输入DAT、相机参数和逐帧真值。包含14个条件；后退／旋转／曲率解码仍需扩展后端。

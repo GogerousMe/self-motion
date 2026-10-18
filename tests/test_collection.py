@@ -59,6 +59,26 @@ class CollectionTests(unittest.TestCase):
             meta = json.loads((suite/'manifest.json').read_text())
             self.assertTrue(all(run['spikes'] is None for run in meta['runs']))
 
+    def test_selfmotion_manifest_and_named_subset(self):
+        module,script = self.load_script()
+        with tempfile.TemporaryDirectory() as tmp:
+            suite = Path(tmp)/'suite'
+            generate_suite(suite,width=4,height=4,frames=2,warmup_frames=1)
+            manifest = suite/'manifest.json'
+            meta = json.loads(manifest.read_text())
+            meta['schema'] = 'selfmotion-stimulus-v1'
+            manifest.write_text(json.dumps(meta))
+            def fake_run(command,*,cwd,env,stdout,stderr,check):
+                Path(env['V1_CALIBRATION_OUTPUT']).write_bytes(struct.pack('<ifiii',SIGNATURE,.2,4,4,84))
+            args = [str(script),'--suite',str(suite),'--executable',str(script),
+                    '--workdir',tmp,'--runs','grating_d090']
+            with patch.object(sys,'argv',args),patch.object(module.subprocess,'run',side_effect=fake_run) as runner:
+                with contextlib.redirect_stdout(io.StringIO()):
+                    module.main()
+            self.assertEqual(runner.call_count,1)
+            meta = json.loads(manifest.read_text())
+            self.assertEqual([r['name'] for r in meta['runs'] if r['spikes']],['grating_d090'])
+
 
 if __name__ == '__main__':
     unittest.main()

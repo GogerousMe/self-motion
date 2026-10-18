@@ -46,7 +46,18 @@ def main(argv=None):
     analyze.add_argument('--border', type=int, default=4)
     analyze.add_argument('--tolerance-deg', type=float, default=22.5)
     analyze.add_argument('--min-resultant', type=float, default=.1)
+    selfmotion = commands.add_parser('generate-selfmotion', help='render 3D ground/cloud dots under known camera motion')
+    selfmotion.add_argument('--output', required=True)
+    selfmotion.add_argument('--frames', type=int, default=80)
+    selfmotion.add_argument('--frame-ms', type=int, default=50)
+    selfmotion.add_argument('--points', type=int, default=250)
+    selfmotion.add_argument('--seed', type=int, default=0)
+    selfmotion.add_argument('--video', action='store_true', help='also export lossless FFV1 AVI using ffmpeg')
     args = parser.parse_args(argv)
+    if args.command == 'generate-selfmotion':
+        from .selfmotion import generate_selfmotion
+        print(json.dumps(generate_selfmotion(args.output,args.frames,args.frame_ms,args.points,args.seed,args.video)))
+        return
     if args.command == 'generate-calibration':
         from .calibration import generate_suite
         print(json.dumps(generate_suite(args.output,args.width,args.height,args.frames,args.frame_ms,
