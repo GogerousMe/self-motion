@@ -28,7 +28,46 @@ def main(argv=None):
     convert.add_argument('--duration-ms', type=int, required=True)
     convert.add_argument('--bin-ms', type=int, default=50)
     convert.add_argument('--intrinsics', required=True, help='JSON with fx_px,fy_px,cx_px,cy_px')
+    generate = commands.add_parser('generate-calibration', help='write eight known-direction C++ VisualStimulus DATs')
+    generate.add_argument('--output', required=True)
+    generate.add_argument('--width', type=int, default=80)
+    generate.add_argument('--height', type=int, default=80)
+    generate.add_argument('--frames', type=int, default=80)
+    generate.add_argument('--frame-ms', type=int, default=50)
+    generate.add_argument('--warmup-frames', type=int, default=20)
+    generate.add_argument('--speed', type=float, default=1.5)
+    generate.add_argument('--kind', choices=['grating','texture'], default='grating')
+    generate.add_argument('--seed', type=int, default=0)
+    analyze = commands.add_parser('analyze-calibration', help='compare actual V1 responses against a stimulus manifest')
+    analyze.add_argument('manifest')
+    analyze.add_argument('--projection-config', required=True)
+    analyze.add_argument('--projection', default='motionProj1')
+    analyze.add_argument('--output', required=True)
+    analyze.add_argument('--border', type=int, default=4)
+    analyze.add_argument('--tolerance-deg', type=float, default=22.5)
+    analyze.add_argument('--min-resultant', type=float, default=.1)
     args = parser.parse_args(argv)
+    if args.command == 'generate-calibration':
+        from .calibration import generate_suite
+        print(json.dumps(generate_suite(args.output,args.width,args.height,args.frames,args.frame_ms,
+                         args.warmup_frames,args.speed,args.kind,args.seed)))
+        return
+    if args.command == 'analyze-calibration':
+        from .calibration import analyze_calibration
+        import csv
+        report = analyze_calibration(args.manifest,args.projection_config,args.projection,
+                                     args.border,args.tolerance_deg,args.min_resultant)
+        output = Path(args.output)
+        output.mkdir(parents=True,exist_ok=False)
+        (output/'report.json').write_text(json.dumps(report,indent=2,allow_nan=False),encoding='utf-8')
+        fields = ['name','status','expected_direction_deg','winner_direction_deg',
+                  'winner_error_deg','resultant','responsive','within_tolerance']
+        with (output/'directions.csv').open('w',newline='',encoding='utf-8') as stream:
+            writer = csv.DictWriter(stream,fieldnames=fields,extrasaction='ignore')
+            writer.writeheader()
+            writer.writerows(report['runs'])
+        print(json.dumps({key:report[key] for key in ('measured_runs','pending_runs','calibration_passed')}))
+        return
     if args.command == 'inspect-spikes':
         from .carlsim import inspect_spikes
         print(json.dumps(inspect_spikes(args.spikes, args.max_events), indent=2))

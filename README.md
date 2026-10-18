@@ -8,6 +8,7 @@ Python 为开发主体；通过离线数值接口对接现有 C++/CUDA MotionEne
 - [开发进度与下一步](docs/DEVELOPMENT.md)
 - [本机实际验证记录](docs/VALIDATION.md)
 - [CARLsim 脉冲 DAT 接入](docs/CARLSIM_IMPORT.md)
+- [Linux 方向校准采集流程](docs/CALIBRATION.md)
 
 ## 快速运行
 
@@ -40,3 +41,5 @@ python -m mstd run outputs/demo_01/recording --output outputs/replay_01 --last-f
 
 Python 是模型主体，保留修改版C++ V1。接入真实DAT只证明接口可用；投影符号、增益、视频对应关系和相机内参校准后，才能报告自运动精度。
 原始DAT、二进制实验输出与本机数据均不上传；测试使用临时生成的小型夹具。
+
+v0.3 新增 `generate-calibration` 与 `analyze-calibration`：生成八方向光栅／纹理刺激，并对真实V1响应输出方向误差及滤波器活动报告。缺少响应时明确标为pending；Linux采集流程见上面的说明。

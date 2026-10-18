@@ -1,5 +1,7 @@
 # 开发记录
 
+> 2026-10-19 v0.3: known-direction stimulus generation, calibration reports and manual Linux collection bundle are ready. See [collection guide](CALIBRATION.md) and [validation](CALIBRATION_VALIDATION.md). Real V1 acquisition is pending.
+
 > 2026-10-19 update: SpikeMonitor DAT import and 84-to-8 projection are implemented. See [M1 validation](M1_VALIDATION.md) and [import guide](CARLSIM_IMPORT.md). Earlier notes below describe the v0.1 milestone.
 
 ## 2026-10-18：M0 首版
