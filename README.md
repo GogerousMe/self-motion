@@ -10,6 +10,16 @@ Python 为开发主体；通过离线数值接口对接现有 C++/CUDA MotionEne
 - [CARLsim 脉冲 DAT 接入](docs/CARLSIM_IMPORT.md)
 - [Linux 方向校准采集流程](docs/CALIBRATION.md)
 - [自运动刺激：前进、后退与曲线路径](docs/SELFMOTION_STIMULI.md)
+- [自运动估计到 SLAM 位姿估计的分阶段方案](docs/SELF_MOTION_TO_SLAM.md)
+- [Ubuntu 20.04 部署与连续八方向光栅 MT 测试](docs/UBUNTU20_MT_GRATING.md)
+- [输入光栅与八方向 MT 空间响应同步视频](docs/MT_RESPONSE_VIDEO.md)
+- [投影、池化、归一化三阶段 MT 对照验证](docs/MT_STAGE_VALIDATION.md)
+- [下一轮合并刺激：纹理对照、连续切换和自运动基线](docs/NEXT_STIMULUS_SEQUENCES.md)
+- [测试实验需求与实施方案](docs/EXPERIMENT_PLAN.md)
+- [Python V1 迁移评估](docs/PYTHON_V1_FEASIBILITY_REVIEW.md)
+- [模型对照图](docs/model-comparison.html)
+- [MATLAB 独立方向、静态和多速度光栅](matlab/README.md)
+- [MATLAB 连续八方向光栅](srcipts/README.md)
 
 ## 快速运行
 

@@ -12,3 +12,7 @@ data/raw/
 *.o
 .env
 .env.*
+
+# Local MATLAB state and generated stimulus bundles
+/MathWorks/
+/srcipts/bw_grating_output/
