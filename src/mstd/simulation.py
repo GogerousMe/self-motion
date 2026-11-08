@@ -31,6 +31,7 @@ def simulate(settings):
     count=min(info['frames'],config['max_frames']) if config['max_frames'] else info['frames']
     init_started=perf_counter()
     model=VisionModel(info['width'],info['height'],config)
+    model.ops.sync()
     initialization_seconds=perf_counter()-init_started
     output=Path(config['output'])
     output.mkdir(parents=True,exist_ok=False)

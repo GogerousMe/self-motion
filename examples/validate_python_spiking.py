@@ -15,6 +15,7 @@ from mstd.simulation import simulate
 from mstd.spiking_mt import PythonSpikingMT
 from mstd.v1 import ArrayOps
 from mstd.v1_recording import dump_json
+from mstd.execution import execution_settings
 
 
 def controls(backend,device):
@@ -51,15 +52,17 @@ def controls(backend,device):
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output',required=True)
-    parser.add_argument('--backend',choices=['numpy','torch'],default='numpy')
-    parser.add_argument('--device',default='cpu')
+    parser.add_argument('--backend',choices=['numpy','torch'])
+    parser.add_argument('--device',help='default cuda; use cpu for NumPy reference')
     parser.add_argument('--all-directions',action='store_true')
     parser.add_argument('--record-spikes',action='store_true',help='also save per-tick events for image trials')
     args=parser.parse_args()
+    execution=execution_settings(args.backend,args.device)
+    args.backend,args.device=execution['backend'],execution['device']
     root=Path(args.output).resolve();root.mkdir(parents=True,exist_ok=False)
     project=Path(__file__).resolve().parents[1]
     source_hashes={path:file_sha256(project/path) for path in (
-        'src/mstd/neural.py','src/mstd/spiking_mt.py','src/mstd/model.py','src/mstd/tensor_pipeline.py',
+        'src/mstd/neural.py','src/mstd/spiking_mt.py','src/mstd/model.py','src/mstd/tensor_pipeline.py','src/mstd/execution.py',
         'src/mstd/monitors.py','src/mstd/simulation.py','src/mstd/v1.py','configs/v1_projection.json')}
     dump_json(root/'source_hashes.json',source_hashes)
     started=perf_counter()

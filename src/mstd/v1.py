@@ -5,6 +5,7 @@ The source-compatible profile intentionally keeps scale>4 and RGB red=0.1299.
 Derived constants/algorithm: UCI-CARL MotionEnergy; see THIRD_PARTY_NOTICES.md.
 """
 from dataclasses import asdict, dataclass
+from contextlib import contextmanager
 from math import factorial, isfinite
 
 import numpy as np
@@ -45,16 +46,17 @@ class ArrayOps:
         if backend == 'numpy' and device != 'cpu':
             raise ValueError('NumPy requires device=cpu')
         self.backend, self.device, self.torch = backend, device, None
+        self._validation_conditions = None
         if backend == 'torch':
             try:
                 import torch
             except ImportError as exc:
-                raise RuntimeError('torch backend requires PyTorch; use --backend numpy --device cpu') from exc
+                raise RuntimeError('GPU execution requires PyTorch; install it or use --device cpu') from exc
             target = torch.device(device)
             if target.type not in ('cpu','cuda'):
                 raise ValueError('only torch CPU/CUDA are supported')
             if target.type == 'cuda' and not torch.cuda.is_available():
-                raise RuntimeError('CUDA requested but unavailable; no silent CPU fallback')
+                raise RuntimeError('CUDA requested but unavailable; check CUDA PyTorch/driver or use --device cpu; no silent CPU fallback')
             self.torch = torch
             self.device = str(target)
             # Reference validation must not use reduced-precision convolution.
@@ -89,6 +91,28 @@ class ArrayOps:
     def sync(self):
         if self.torch and self.device.startswith('cuda'):
             self.torch.cuda.synchronize(self.device)
+
+    def check(self,condition):
+        if self._validation_conditions is not None:
+            self._validation_conditions.append(condition)
+            return True
+        return bool(condition)
+
+    @contextmanager
+    def validation_scope(self):
+        """Collect device-side numerical checks; synchronize once at scope end.
+
+        Keep pre-reset overflow flags, even when a later reset makes v finite.
+        A failed frame must be discarded/reset; execution is not rolled back.
+        """
+        if self._validation_conditions is not None:raise RuntimeError('nested validation scopes unsupported')
+        conditions=[];self._validation_conditions=conditions
+        try:
+            yield
+            if conditions:
+                passed=self.torch.stack(conditions).all() if self.torch else np.asarray(conditions).all()
+                if not bool(passed):raise FloatingPointError('neural numerical validation failed during frame')
+        finally:self._validation_conditions=None
 
     def correlate(self, value, kernel, axis):
         """Source kernels do correlation, not flipped convolution; zero padding."""

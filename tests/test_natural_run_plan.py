@@ -33,12 +33,14 @@ class NaturalRunPlanTests(unittest.TestCase):
     def test_all_frames_and_preview_names_follow_actual_input(self):
         with tempfile.TemporaryDirectory() as t:
             root=Path(t);sid=self.fixture(root)
-            p=N.plan(root,'daria_walk',stimulus_id=sid,stamp='20261108_120000')
+            p=N.plan(root,'daria_walk',device='cpu',stimulus_id=sid,stamp='20261108_120000')
             self.assertEqual(p['frames'],3);self.assertIsNone(p['config']['max_frames'])
             self.assertEqual(p['run_id'],'20261108_120000__daria_walk_19x21_f000003__py_spike_cpu__r01')
             self.assertTrue(p['recording'].startswith('outputs/recordings/daria_walk/'))
             self.assertEqual(p['frame'],2)
             preview=N.plan(root,'daria_walk',stage='scratch',max_frames=1,repeat=2,stimulus_id=sid,stamp='20261108_120001')
+            self.assertEqual((preview['config']['backend'],preview['config']['device']),('torch','cuda'))
+            self.assertIn('py_spike_cuda',preview['run_id'])
             self.assertTrue(preview['recording'].startswith('experiments/scratch/'))
             self.assertIn('f000001',preview['run_id']);self.assertTrue(preview['run_id'].endswith('r02'))
 

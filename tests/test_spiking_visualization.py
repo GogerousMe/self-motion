@@ -20,7 +20,7 @@ class SpikingVisualizationTests(unittest.TestCase):
     def fixture(self,root):
         stimulus=root/'input.dat';write_stimulus(stimulus,19,21,stimulus_frames(19,21,3,0,1.5))
         output=root/'run'
-        simulate(dict(mt_backend='python_spiking',mt_radius=0,input=dict(path=str(stimulus)),
+        simulate(dict(mt_backend='python_spiking',backend='numpy',device='cpu',mt_radius=0,input=dict(path=str(stimulus)),
                       projection_config=str(ROOT/'configs/v1_projection.json'),output=str(output),progress_every=0,
                       monitors=dict(spikes=True,neural_state=True)))
         return stimulus,output

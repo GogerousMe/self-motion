@@ -80,14 +80,15 @@ class PythonSpikingMT:
         self.ticks+=1
         return {'v1':events,'exc':exc,'inh':inh}
 
-    def readout(self):
+    def readout(self,host_evidence=True):
         op=self.op
         total=self.trace.sum(dim=0) if op.torch else self.trace.sum(axis=0)
         activity=self.trace/(1+total)
         einsum=op.torch.einsum if op.torch else np.einsum
         vectors=einsum('dyx,dc->cyx',activity,self.units)
         norm=(vectors*vectors).sum(dim=0).sqrt() if op.torch else np.sqrt((vectors*vectors).sum(axis=0))
-        return dict(activity=activity,vectors=vectors,evidence=float(norm.mean()),pooled_rates=self.trace)
+        evidence=norm.mean()
+        return dict(activity=activity,vectors=vectors,evidence=float(evidence) if host_evidence else evidence,pooled_rates=self.trace)
 
     def diagnostics(self):
         # Copy so external monitors/controllers cannot mutate persistent state.

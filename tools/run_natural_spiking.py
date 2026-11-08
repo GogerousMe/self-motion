@@ -17,6 +17,7 @@ ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'src'))
 from mstd.calibration import inspect_stimulus,file_sha256
 from mstd.model import load_model_config,model_config
+from mstd.execution import execution_settings
 
 DEFAULTS={
     'daria_walk':('daria_walk','daria_walk__180x144__f000084__dt50ms__gray_native__v01'),
@@ -71,15 +72,15 @@ def registry_update(root,row):
             lock.unlink()
 
 
-def plan(root,sequence,stage='recording',repeat=1,backend='numpy',device='cpu',max_frames=None,stimulus_id=None,view_frame=30,stamp=None):
+def plan(root,sequence,stage='recording',repeat=1,backend=None,device=None,max_frames=None,stimulus_id=None,view_frame=30,stamp=None):
     dataset,sid,path,info,frame_ms,digest=indexed_stimulus(root,sequence,stimulus_id)
     if type(repeat) is not int or repeat<1:raise ValueError('positive repeat required')
     if max_frames is not None and (type(max_frames) is not int or max_frames<1):raise ValueError('positive max_frames required')
     if view_frame<0:raise ValueError('nonnegative view frame required')
-    if (backend,device) not in (('numpy','cpu'),('torch','cpu'),('torch','cuda')):raise ValueError('choose numpy/cpu or torch/cpu/cuda')
+    execution=execution_settings(backend,device);backend,device=execution['backend'],execution['device']
     count=min(info['frames'],max_frames) if max_frames else info['frames']
     stamp=stamp or datetime.now(timezone(timedelta(hours=8))).strftime('%Y%m%d_%H%M%S')
-    tag='py_spike_'+('cuda' if device=='cuda' else 'cpu')
+    tag='py_spike_'+('cuda' if device.startswith('cuda') else 'cpu')
     run=f'{stamp}__{dataset}_{info["width"]}x{info["height"]}_f{count:06d}__{tag}__r{repeat:02d}'
     recording=(Path('outputs/recordings')/dataset/run if stage=='recording' else Path('experiments/scratch')/run)
     view=Path('outputs/visualizations')/dataset/run/'mt_spikes__v01'
@@ -115,7 +116,7 @@ def record(root,p,kind,status,error=''):
                       parent_run_ids=parents,notes=note,processed_frames=p['frames'],
                       source_sha256={name:file_sha256(root/name) for name in (
                           'tools/run_natural_spiking.py','src/mstd/v1.py','src/mstd/neural.py',
-                          'src/mstd/spiking_mt.py','src/mstd/model.py','src/mstd/tensor_pipeline.py',
+                          'src/mstd/spiking_mt.py','src/mstd/model.py','src/mstd/tensor_pipeline.py','src/mstd/execution.py',
                           'src/mstd/simulation.py','src/mstd/monitors.py','configs/v1_projection.json',
                           'examples/visualize_python_spiking.py','examples/render_model_mt.py') if (root/name).is_file()},
                       command=[sys.executable,*sys.argv],view_parameters=dict(frame=p['frame'],rate_max=300,direction_deg=0,video=True) if is_view else None)
@@ -128,9 +129,9 @@ def main():
     parser.add_argument('--stimulus-id',help='explicit indexed alternative, e.g. snowboard 66-frame variant')
     parser.add_argument('--stage',choices=['scratch','recording'],default='scratch')
     parser.add_argument('--repeat',type=int,default=1)
-    parser.add_argument('--max-frames',type=int,help='omit to process ALL input frames, overriding template limit 40')
-    parser.add_argument('--backend',choices=['numpy','torch'],default='numpy')
-    parser.add_argument('--device',choices=['cpu','cuda'],default='cpu')
+    parser.add_argument('--max-frames',type=int,help='omit to process ALL input frames')
+    parser.add_argument('--backend',choices=['numpy','torch'])
+    parser.add_argument('--device',choices=['cpu','cuda','gpu'],help='default CUDA; cpu selects NumPy unless backend is explicit')
     parser.add_argument('--view-frame',type=int,default=30)
     parser.add_argument('--dry-run',action='store_true')
     args=parser.parse_args();os.chdir(ROOT)

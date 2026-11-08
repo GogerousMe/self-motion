@@ -12,7 +12,7 @@
 | snowboard | snowboard__854x480__f000065__dt50ms__gray_native__v01 | 854×480 | 65 |
 
 索引中另有Daria补边188×144和snowboard 66帧版。只有显式`--stimulus-id`指定这些已登记ID时才切换，不能把结果混用同一输入ID。
-工具默认覆盖配置模板的40帧上限，处理完整输入；--max-frames用于明确的前缀试跑，运行ID写实际处理数量。
+工具默认处理完整输入；--max-frames用于明确的前缀试跑，运行ID写实际处理数量。
 
 ## 服务器准备
 
@@ -21,6 +21,7 @@
 ```bash
 export PYTHONPATH="$PWD/src${PYTHONPATH:+:$PYTHONPATH}"
 python -c "import numpy, matplotlib; print('dependencies OK')"
+python -c "import torch; print(torch.__version__, torch.version.cuda, torch.cuda.is_available())"
 ffmpeg -version
 ```
 
@@ -50,7 +51,7 @@ python tools/run_natural_spiking.py --sequence snowboard --stage recording --rep
 ```
 
 每条命令依次运行原生模型、校验完成帧数/输入哈希、调用原生可视化脚本生成PNG/曲线/栅格图/MP4。没有在本机实际跑这三段完整自然视频；本机仅进行了输入预检与封装单元/回归测试。
-默认numpy/cpu，是已有验证的基线。如服务器已验收PyTorch CUDA，可以追加`--backend torch --device cuda`，后端标签相应为py_spike_cuda；GPU不是本轮已验证结论。
+2026-11-08起默认torch/cuda，后端标签为py_spike_cuda；追加`--device cpu`运行已有NumPy参考。缺少CUDA时明确报错。GPU环境、指标及服务器验收见[GPU_EXECUTION.md](GPU_EXECUTION.md)，本机没有GPU通过或提速结论。下方cpu路径仅为命名示例；默认实际生成cuda标签。
 
 ## 命名和登记
 

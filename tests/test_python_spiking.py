@@ -121,7 +121,7 @@ class NeuralTests(unittest.TestCase):
 
 class PythonNetworkTests(unittest.TestCase):
     def settings(self,**extra):
-        return dict(mt_backend='python_spiking',mt_radius=0,projection_config=PROJECTION,
+        return dict(mt_backend='python_spiking',backend='numpy',device='cpu',mt_radius=0,projection_config=PROJECTION,
                     input=dict(kind='v1_recording',path='unused'),layers=dict(v1=False),progress_every=0,**extra)
 
     def test_feedback_is_delayed_and_reset_is_reproducible(self):
@@ -227,7 +227,7 @@ class PythonNetworkTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             root=Path(tmp);stim=root/'stim.dat'
             write_stimulus(stim,19,19,stimulus_frames(19,19,4,0,1.5))
-            base=dict(mt_backend='python_spiking',mt_radius=0,projection_config=PROJECTION,
+            base=dict(mt_backend='python_spiking',backend='numpy',device='cpu',mt_radius=0,projection_config=PROJECTION,
                       input=dict(path=str(stim)),progress_every=0)
             on=simulate({**base,'output':str(root/'on'),'monitors':dict(spikes=True,neural_state=True)})
             off={k:False for k in ('v1','mt_projection','mt_pooling','mt_normalization','mstd','summary','spikes','neural_state')}

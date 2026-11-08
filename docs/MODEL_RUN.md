@@ -1,5 +1,7 @@
 # 一个项目、一个环境、一次运行
 
+2026-11-08更新：不指定config时统一入口默认Python脉冲MT和GPU，`--device cpu`切回CPU，见[GPU运行说明](GPU_EXECUTION.md)。本文显式使用`configs/model.json`的例子仍为旧连续率基线。
+
 > 2026-11-06：新增Python脉冲MT主线，选择 `--config configs/model_python_spiking.json`，不需要CARLsim/CMake。上传、验证、细时间步反馈及记录格式见[Python脉冲运行说明](PYTHON_SPIKING_RUN.md)。本文原配置仍对应连续率基线。
 
 V1、MT、MSTd共用现有项目及虚拟环境。没有“V1专用虚拟环境”的要求。原`mstd.v1_cli`保留为数值对照工具，日常运行使用统一入口。

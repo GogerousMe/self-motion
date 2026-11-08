@@ -1,5 +1,7 @@
 # Python 脉冲 MT：运行、接口和验证（2026-11-06）
 
+2026-11-08更新：统一入口和本页验证脚本默认PyTorch/CUDA，CPU运行追加`--device cpu`。模型无需CARLsim/CMake。设备规则、服务器命令和GPU验收指标见[GPU_EXECUTION.md](GPU_EXECUTION.md)。本机尚未实测GPU性能。
+
 MT输出解析、方向/时序/脉冲分析及结果登记步骤见[MT响应分析流程](MT_RESPONSE_ANALYSIS.md)。
 
 ## 当前实现
@@ -48,7 +50,7 @@ python run_model.py --config configs/model_python_spiking.json \
 ```
 
 图像不会自动缩放。先使用短、小尺寸输入。提供真实对应内参才报告标定航向角；未提供时仍计算MSTd活动。
-如已有PyTorch，可用验证脚本的 `--backend torch --device cuda` 检查GPU；本机未安装PyTorch，不将GPU支持视为已验收，也不要求随机事件逐个匹配NumPy。
+以上命令默认GPU；CPU参考运行追加`--device cpu`。本机未安装PyTorch，不将GPU支持视为已验收，也不要求随机事件逐个匹配NumPy。
 
 ## 状态和数值约定
 

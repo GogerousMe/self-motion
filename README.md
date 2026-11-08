@@ -1,5 +1,7 @@
 # Python V1–MT–MSTd 自运动模型
 
+**2026-11-08：Python脉冲主线默认GPU。** `run_model.py`默认使用`model_python_spiking.json`与PyTorch/CUDA；加`--device cpu`即可切换NumPy/CPU。环境检查、运行命令和验收指标见[GPU运行说明](docs/GPU_EXECUTION.md)。GPU性能尚待服务器实测。
+
 **文件管理入口：** 所有会话先读 [AGENTS.md](AGENTS.md) 和 [目录与命名规范](docs/FILE_ORGANIZATION.md)。刺激在 `input/`，验证在 `experiments/`，正式响应和展示按运行编号分别存放；旧路径见 [迁移索引](docs/migrations/20261107_layout/paths.csv)。
 
 **2026-11-06：Python脉冲MT主线已接入。** 使用 `configs/model_python_spiking.json`，无需CMake/CARLsim库；见[运行、上传与反馈接口](docs/PYTHON_SPIKING_RUN.md)。MT在Python中维护膜电位、E/I突触和延迟；MSTd暂为逐神经时间步更新的连续适配器。旧 `model_spiking.json` 仅用于CARLsim离线对照。

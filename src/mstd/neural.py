@@ -9,11 +9,11 @@ import numpy as np
 
 
 def finite(op, value):
-    return bool(op.torch.isfinite(value).all()) if op.torch else bool(np.isfinite(value).all())
+    return op.check(op.torch.isfinite(value).all()) if op.torch else op.check(np.isfinite(value).all())
 
 
 def nonnegative(op,value):
-    return finite(op,value) and bool((value>=0).all())
+    return finite(op,value) and op.check((value>=0).all())
 
 
 def where(op,condition,yes,no):

@@ -54,7 +54,7 @@ def main(argv=None):
     selfmotion.add_argument('--seed', type=int, default=0)
     selfmotion.add_argument('--video', action='store_true', help='also export lossless FFV1 AVI using ffmpeg')
     simulate = commands.add_parser('simulate', help='run the unified V1-MT-MSTd model with layer monitors')
-    simulate.add_argument('--config', default='configs/model.json')
+    simulate.add_argument('--config', default='configs/model_python_spiking.json')
     inputs = simulate.add_mutually_exclusive_group()
     inputs.add_argument('--stimulus', help='image DAT; overrides configured input')
     inputs.add_argument('--v1-recording', help='continuous V1 recording; also set layers.v1=false')
@@ -74,8 +74,12 @@ def main(argv=None):
             config['input'] = {'kind':'v1_recording','path':args.v1_recording}
         for name in ('output','backend','device','intrinsics','max_frames'):
             if getattr(args,name) is not None:config[name]=getattr(args,name)
+        if args.backend is not None or args.device is not None:
+            from .execution import execution_settings
+            config.update(execution_settings(args.backend,args.device))
         report = run_simulation(model_config(config))
         print(json.dumps({'frames':report['frames'],'output':config['output'],
+                          'backend':config['backend'],'device':config['device'],
                           'layers':report['model']['layers'],
                           'bearing_calibrated':report['model']['bearing_calibrated']},indent=2))
         return

@@ -15,6 +15,7 @@ from .tensor_pipeline import DirectionMT,TensorMSTd
 from .v1 import ArrayOps,MotionEnergyV1
 from .neural import SpikeConfig,DelayLine,finite
 from .spiking_mt import PythonSpikingMT
+from .execution import execution_settings
 
 DEFAULT_CONFIG = {
     'schema':'mstd-model-v1',
@@ -46,6 +47,8 @@ def model_config(value=None):
                 raise ValueError(f'invalid {key} settings')
             config[key].update(item)
         else:config[key]=item
+    if config['mt_backend']=='python_spiking':
+        config.update(execution_settings(value.get('backend'),value.get('device')))
     if config['schema']!='mstd-model-v1':raise ValueError('unsupported model configuration')
     if config['mt_backend'] not in ('rate','carlsim','python_spiking'):raise ValueError('unsupported MT backend')
     if config['mt_backend']=='python_spiking':
@@ -176,7 +179,6 @@ class VisionModel:
 
     def _spiking_frame(self,raw,timestamp_s):
         op=self.ops
-        self.mt.set_rates(raw)
         dt_ms=self.config['spiking']['dt_ms'];dt=dt_ms/1000
         count=round(self.config['frame_ms']/dt_ms)
         totals={k:op.zeros(shape) for k,shape in (('v1',self.mt.input_shape),('exc',self.mt.shape),('inh',self.mt.shape))}
@@ -184,11 +186,14 @@ class VisionModel:
         for i in range(count):
             arriving=self.feedback_delay.read()
             spikes=self.mt.tick(arriving)
-            mt=self.mt.readout()
+            export_state=(not op.torch or not op.device.startswith('cuda')
+                          or self.feedback_controller is not None or i==count-1)
+            mt=self.mt.readout(host_evidence=export_state)
             # Neural receivers can consume events directly; the temporary rate
             # MSTd adapter ignores these extra fields. Receivers own their delays.
             mt.update(spikes=spikes['exc'],inh_spikes=spikes['inh'])
-            mst=self.mstd.step(mt,dt) if self.mstd else None
+            mst=(self.mstd.step(mt,dt,return_state=export_state) if isinstance(self.mstd,TensorMSTd)
+                 else self.mstd.step(mt,dt) if self.mstd else None)
             end=timestamp_s+(i+1)*dt
             outgoing=op.zeros((4,*self.mt.shape))
             if self.feedback_controller:
@@ -222,7 +227,11 @@ class VisionModel:
         with self.ops.torch.inference_mode() if self.ops.torch else nullcontext():
             raw=self.v1.step(value,timestamp_s) if self.v1 else self.ops.array(value)
             if tuple(raw.shape)!=(3,28,self.height,self.width):raise ValueError('expected SFYX V1 rates')
-            if self.config['mt_backend']=='python_spiking':mt,mst=self._spiking_frame(raw,timestamp_s)
+            if self.config['mt_backend']=='python_spiking':
+                # Reject bad external/scaled rates before asynchronous Poisson sampling.
+                self.mt.set_rates(raw)
+                validation=self.ops.validation_scope() if self.ops.torch and self.ops.device.startswith('cuda') else nullcontext()
+                with validation:mt,mst=self._spiking_frame(raw,timestamp_s)
             else:
                 mt=self.mt.step(raw) if self.mt else None
                 mst=self.mstd.step(mt,self.interval) if self.mstd else None
@@ -233,6 +242,12 @@ class VisionModel:
 
     def description(self):
         return {'layers':self.config['layers'],'backend':self.ops.backend,'device':self.ops.device,
+                'execution':{'numpy_version':np.__version__,
+                             'torch_version':str(self.ops.torch.__version__) if self.ops.torch else None,
+                             'cuda_version':self.ops.torch.version.cuda if self.ops.torch else None,
+                             'gpu_name':self.ops.torch.cuda.get_device_name(self.ops.device)
+                             if self.ops.torch and self.ops.device.startswith('cuda') else None,
+                             'neural_dtype':'float32'},
                 'mt_backend':self.config['mt_backend'],
                 'neural':({**self.config['spiking'],'ticks':self.ticks,
                            'mstd_type':'continuous-rate adapter advanced every neural tick',

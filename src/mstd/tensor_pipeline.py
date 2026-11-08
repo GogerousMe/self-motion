@@ -82,7 +82,7 @@ class TensorMSTd:
     def reset(self):
         self.activity = self.ops.zeros((len(self.centers),))
 
-    def step(self,mt,duration_s):
+    def step(self,mt,duration_s,return_state=True):
         if not isfinite(duration_s) or duration_s<=0:
             raise ValueError('positive finite duration required')
         op,cfg = self.ops,self.config
@@ -91,8 +91,7 @@ class TensorMSTd:
             norm = (v*v).sum(dim=0).sqrt().sum()
             score = (self.templates*v).sum(dim=(1,2,3))/norm.clamp_min(1e-12)
             score = score.clamp_min(0)
-            if float(norm)<=1e-12:
-                score = op.zeros((len(self.centers),))
+            score = op.torch.where(norm>1e-12,score,op.zeros((len(self.centers),)))
         else:
             norm = np.sqrt((v*v).sum(axis=0)).sum()
             score = np.maximum((self.templates*v).sum(axis=(1,2,3))/max(float(norm),1e-12),0)
@@ -107,6 +106,7 @@ class TensorMSTd:
             derivative = (-a+(1-a)*(cfg.gain*score+cfg.recurrent_gain*feedback)-a*inhibition)/cfg.tau_s
             self.activity = (a+dt*derivative).clamp(0,1) if op.torch else np.clip(a+dt*derivative,0,1)
             remaining -= dt
+        if not return_state:return None
         activities = op.host(self.activity).tolist()
         order = sorted(range(len(activities)),key=activities.__getitem__,reverse=True)
         winner,runner = order[:2]
