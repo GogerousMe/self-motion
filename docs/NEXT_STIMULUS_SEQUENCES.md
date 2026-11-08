@@ -4,17 +4,17 @@
 
 ## 原始目录是什么
 
-`outputs/calibration_texture_01/` 含8个独立DAT：texture_d000、d045、d090、d135、d180、d225、d270、d315，以及manifest和PGM预览。每段80×80、80帧、50ms/帧、4秒、速度1.5px/frame。它们是固定随机亮点纹理的平移，不是三维点云，也不是每帧重新随机生成。
+`input/stimuli/texture/texture_calibration__80x80__f000080__dt50ms__8dirs__v01/` 含8个独立DAT：texture_d000、d045、d090、d135、d180、d225、d270、d315，以及manifest和PGM预览。每段80×80、80帧、50ms/帧、4秒、速度1.5px/frame。它们是固定随机亮点纹理的平移，不是三维点云，也不是每帧重新随机生成。
 
 原8段只有移动纹理；没有专门的静止纹理负对照，也没有连续保持纹理位置的方向切换。因为独立片段从初始纹理位置开始，简单拼接会重置图像相位，不能宣称测试了无重置方向变化。
 
-`outputs/selfmotion_01/` 含14类相机运动刺激及逐帧真值、内参和原始视频；当前只合并5个适合膨胀模板基线的条件。后退、纯旋转、曲线等原文件保留，暂不混入当前验收。
+`input/stimuli/selfmotion/selfmotion_suite__80x80__f000080__dt50ms__14cases__v01/` 含14类相机运动刺激及逐帧真值、内参和原始视频；当前只合并5个适合膨胀模板基线的条件。后退、纯旋转、曲线等原文件保留，暂不混入当前验收。
 
 ## 已生成两套连续输入
 
 ### A. 纹理综合测试
 
-路径：`outputs/validation_sequences_01/texture/`
+路径：`input/stimuli/texture/texture_sequence__80x80__f001800__dt50ms__v01/`
 
 | 文件 | 用途 |
 |---|---|
@@ -39,7 +39,7 @@
 
 ### B. 自运动基础测试
 
-路径：`outputs/validation_sequences_01/selfmotion/`
+路径：`input/stimuli/selfmotion/selfmotion_sequence__80x80__f000400__dt50ms__v01/`
 
 80×80、单通道、400帧、50ms/帧，共20000ms，DAT大小2560025字节。
 
@@ -75,7 +75,7 @@ DAT里没有附带XYZ深度通道。图像中不同点的相对位移包含了�
 
 ## 在服务器做什么
 
-1. 将 `outputs/validation_sequences_01/texture/` 和 `selfmotion/` 分别上传，保留DAT、CSV和manifest配套；自运动再保留内参和真值。预览MP4可只放本机，不必送入V1。
+1. 将 `input/stimuli/texture/texture_sequence__80x80__f001800__dt50ms__v01/` 和 `selfmotion/` 分别上传，保留DAT、CSV和manifest配套；自运动再保留内参和真值。预览MP4可只放本机，不必送入V1。
 2. 分别运行两次CARLsim：纹理1800帧/90000ms，自运动400帧/20000ms，每帧50ms。
 3. 每次完整实验开始前重置V1，整份DAT内部保持连续，不在每段重置。确认输入80×80、V1输出深度84；每份响应单独命名或单独目录保存。
 4. 保存运行日志和实际输入哈希，不能凭最后一次脉冲确定实验总时长。
@@ -90,29 +90,29 @@ DAT里没有附带XYZ深度通道。图像中不同点的相对位移包含了�
 ```bash
 export PYTHONPATH="$PWD/src"
 python examples/prepare_validation_sequences.py \
-  --texture-suite outputs/calibration_texture_01 \
-  --selfmotion-suite outputs/selfmotion_01 \
-  --output outputs/validation_sequences_02
+  --texture-suite input/stimuli/texture/texture_calibration__80x80__f000080__dt50ms__8dirs__v01 \
+  --selfmotion-suite input/stimuli/selfmotion/selfmotion_suite__80x80__f000080__dt50ms__14cases__v01 \
+  --output input/stimuli/sequence_preparation/manual__sequence_generation__r02
 ```
 
 预览任意原始DAT或整个原目录，每个DAT生成一个MP4：
 
 ```bash
 python examples/preview_stimulus_dat.py \
-  --input outputs/calibration_texture_01 \
-  --output outputs/texture_original_mp4_01
+  --input input/stimuli/texture/texture_calibration__80x80__f000080__dt50ms__8dirs__v01 \
+  --output experiments/scratch/manual__texture_original_mp4_01__r01
 
 python examples/preview_stimulus_dat.py \
-  --input outputs/selfmotion_01 \
-  --output outputs/selfmotion_original_mp4_01
+  --input input/stimuli/selfmotion/selfmotion_suite__80x80__f000080__dt50ms__14cases__v01 \
+  --output experiments/scratch/manual__selfmotion_original_mp4_01__r01
 ```
 
 预览合并DAT：
 
 ```bash
 python examples/preview_stimulus_dat.py \
-  --input outputs/validation_sequences_01/texture/all_stimuli.dat \
-  --output outputs/texture_combined_mp4_02
+  --input input/stimuli/texture/texture_sequence__80x80__f001800__dt50ms__v01/all_stimuli.dat \
+  --output experiments/scratch/manual__texture_combined_mp4_02__r01
 ```
 
 服务器已移动DAT时可用 `--manifest /实际配套清单路径/manifest.json`。若没有清单，需要显式 `--frame-ms 50`，画面仅标文件名，不猜测方向；清单存在时仍验证哈希与时间。支持 `--max-frames` 和 `--playback-rate 2`，只影响预览。输入DAT不包含任何文字或箭头，标注只在MP4里。

@@ -15,7 +15,12 @@ cfg.FrameMs = 50;              % 与 CARLsim 帧时长一致
 cfg.PhaseCycles = 0;           % 每个方向开始时重置相位
 cfg.ShowPreview = true;        % false只生成、不播放
 cfg.PlaybackRate = 1;          % 1原速，2倍速；不改变DAT或仿真时长
-outputDir = fullfile(scriptDir,'bw_grating_output', ...
-    ['sequence_' char(datetime('now','Format','yyyyMMdd_HHmmss_SSS'))]);
+segmentFrames = cfg.StimulusFrames + cfg.BlankFrames;
+totalFrames = numel(cfg.Directions) * numel(cfg.Speeds) * segmentFrames;
+if ~cfg.TrailingBlank, totalFrames = totalFrames - cfg.BlankFrames; end
+bundleName = sprintf('grating_sequence__%dx%d__f%06d__dt%sms__v01__t%s', ...
+    cfg.Size(2), cfg.Size(1), totalFrames, strrep(num2str(cfg.FrameMs),'.','p'), ...
+    char(datetime('now','TimeZone','Asia/Shanghai','Format','yyyyMMdd_HHmmss_SSS')));
+outputDir = fullfile(fileparts(scriptDir),'input','stimuli','grating',bundleName);
 result = generateGratingSequence(outputDir,cfg);
 fprintf('输出目录：%s\n',outputDir);

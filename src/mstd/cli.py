@@ -12,7 +12,7 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description="MT-MSTd direction-rate reference model")
     commands = parser.add_subparsers(dest="command", required=True)
     demo = commands.add_parser("demo", help="run synthetic radial-response smoke experiment")
-    demo.add_argument("--output", default="outputs/demo")
+    demo.add_argument("--output", default="experiments/scratch/manual__demo__r01")
     run = commands.add_parser("run", help="process a validated V1-rate-v1 recording")
     run.add_argument("recording")
     run.add_argument("--output", required=True)
@@ -53,7 +53,32 @@ def main(argv=None):
     selfmotion.add_argument('--points', type=int, default=250)
     selfmotion.add_argument('--seed', type=int, default=0)
     selfmotion.add_argument('--video', action='store_true', help='also export lossless FFV1 AVI using ffmpeg')
+    simulate = commands.add_parser('simulate', help='run the unified V1-MT-MSTd model with layer monitors')
+    simulate.add_argument('--config', default='configs/model.json')
+    inputs = simulate.add_mutually_exclusive_group()
+    inputs.add_argument('--stimulus', help='image DAT; overrides configured input')
+    inputs.add_argument('--v1-recording', help='continuous V1 recording; also set layers.v1=false')
+    simulate.add_argument('--output')
+    simulate.add_argument('--backend', choices=['numpy','torch'])
+    simulate.add_argument('--device')
+    simulate.add_argument('--intrinsics', help='camera JSON; enables calibrated bearing readout')
+    simulate.add_argument('--max-frames', type=int)
     args = parser.parse_args(argv)
+    if args.command == 'simulate':
+        from .model import load_model_config,model_config
+        from .simulation import simulate as run_simulation
+        config = load_model_config(args.config)
+        if args.stimulus:
+            config['input'] = {'kind':'stimulus_dat','path':args.stimulus}
+        if args.v1_recording:
+            config['input'] = {'kind':'v1_recording','path':args.v1_recording}
+        for name in ('output','backend','device','intrinsics','max_frames'):
+            if getattr(args,name) is not None:config[name]=getattr(args,name)
+        report = run_simulation(model_config(config))
+        print(json.dumps({'frames':report['frames'],'output':config['output'],
+                          'layers':report['model']['layers'],
+                          'bearing_calibrated':report['model']['bearing_calibrated']},indent=2))
+        return
     if args.command == 'generate-selfmotion':
         from .selfmotion import generate_selfmotion
         print(json.dumps(generate_selfmotion(args.output,args.frames,args.frame_ms,args.points,args.seed,args.video)))

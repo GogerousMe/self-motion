@@ -1,0 +1,19 @@
+{
+  "artifact_count": 51,
+  "experiment_rows": 37,
+  "stimulus_packages": 14,
+  "updated_current_docs": [
+    "README.md",
+    "docs/CALIBRATION.md",
+    "docs/EXPERIMENT_PLAN.md",
+    "docs/IMAGE_SEQUENCE_DAT.md",
+    "docs/MODEL_RUN.md",
+    "docs/MT_CARLSIM_COMPARISON.md",
+    "docs/MT_RESPONSE_VIDEO.md",
+    "docs/NEXT_STIMULUS_SEQUENCES.md",
+    "docs/SELFMOTION_STIMULI.md",
+    "docs/SPIKING_MT_PLAN.md",
+    "docs/UBUNTU20_MT_GRATING.md",
+    "matlab/README.md"
+  ]
+}

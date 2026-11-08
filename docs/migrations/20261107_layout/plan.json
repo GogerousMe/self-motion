@@ -1,0 +1,1437 @@
+[
+  {
+    "old": "outputs/stimuli/daria_walk_180x144_gray.dat",
+    "new": "input/stimuli/natural/daria_walk/daria_walk__180x144__f000084__dt50ms__gray_native__v01/daria_walk__180x144__f000084__dt50ms__gray_native__v01.dat",
+    "kind": "stimulus"
+  },
+  {
+    "old": "outputs/stimuli/daria_walk_180x144_gray.dat.json",
+    "new": "input/stimuli/natural/daria_walk/daria_walk__180x144__f000084__dt50ms__gray_native__v01/daria_walk__180x144__f000084__dt50ms__gray_native__v01.dat.json",
+    "kind": "stimulus_metadata"
+  },
+  {
+    "old": "outputs/stimuli/daria_walk_188x144_gray_pad.dat",
+    "new": "input/stimuli/natural/daria_walk/daria_walk__188x144__f000084__dt50ms__gray_pad__v01/daria_walk__188x144__f000084__dt50ms__gray_pad__v01.dat",
+    "kind": "stimulus"
+  },
+  {
+    "old": "outputs/stimuli/daria_walk_188x144_gray_pad.dat.json",
+    "new": "input/stimuli/natural/daria_walk/daria_walk__188x144__f000084__dt50ms__gray_pad__v01/daria_walk__188x144__f000084__dt50ms__gray_pad__v01.dat.json",
+    "kind": "stimulus_metadata"
+  },
+  {
+    "old": "outputs/stimuli/davis_paragliding_first70_gray.dat",
+    "new": "input/stimuli/natural/davis_paragliding/davis_paragliding__854x480__f000070__dt50ms__gray_native__v01/davis_paragliding__854x480__f000070__dt50ms__gray_native__v01.dat",
+    "kind": "stimulus"
+  },
+  {
+    "old": "outputs/stimuli/davis_paragliding_first70_gray.dat.json",
+    "new": "input/stimuli/natural/davis_paragliding/davis_paragliding__854x480__f000070__dt50ms__gray_native__v01/davis_paragliding__854x480__f000070__dt50ms__gray_native__v01.dat.json",
+    "kind": "stimulus_metadata"
+  },
+  {
+    "old": "outputs/stimuli/snowboard_first65_gray.dat",
+    "new": "input/stimuli/natural/snowboard/snowboard__854x480__f000065__dt50ms__gray_native__v01/snowboard__854x480__f000065__dt50ms__gray_native__v01.dat",
+    "kind": "stimulus"
+  },
+  {
+    "old": "outputs/stimuli/snowboard_first65_gray.dat.json",
+    "new": "input/stimuli/natural/snowboard/snowboard__854x480__f000065__dt50ms__gray_native__v01/snowboard__854x480__f000065__dt50ms__gray_native__v01.dat.json",
+    "kind": "stimulus_metadata"
+  },
+  {
+    "old": "outputs/stimuli/snowboard_gray.dat",
+    "new": "input/stimuli/natural/snowboard/snowboard__854x480__f000066__dt50ms__gray_native__v01/snowboard__854x480__f000066__dt50ms__gray_native__v01.dat",
+    "kind": "stimulus"
+  },
+  {
+    "old": "outputs/stimuli/snowboard_gray.dat.json",
+    "new": "input/stimuli/natural/snowboard/snowboard__854x480__f000066__dt50ms__gray_native__v01/snowboard__854x480__f000066__dt50ms__gray_native__v01.dat.json",
+    "kind": "stimulus_metadata"
+  },
+  {
+    "old": "outputs/calibration_grating_01",
+    "new": "input/stimuli/grating/grating_calibration__80x80__f000080__dt50ms__8dirs__v01",
+    "kind": "stimulus_bundle"
+  },
+  {
+    "old": "outputs/calibration_texture_01",
+    "new": "input/stimuli/texture/texture_calibration__80x80__f000080__dt50ms__8dirs__v01",
+    "kind": "stimulus_bundle"
+  },
+  {
+    "old": "outputs/matlab_bw_grating_02",
+    "new": "input/stimuli/grating/bw_grating_suite__80x80__f000080__dt50ms__v02",
+    "kind": "stimulus_bundle"
+  },
+  {
+    "old": "outputs/selfmotion_01",
+    "new": "input/stimuli/selfmotion/selfmotion_suite__80x80__f000080__dt50ms__14cases__v01",
+    "kind": "stimulus_bundle"
+  },
+  {
+    "old": "outputs/validation_sequences_01/texture",
+    "new": "input/stimuli/texture/texture_sequence__80x80__f001800__dt50ms__v01",
+    "kind": "stimulus_bundle"
+  },
+  {
+    "old": "outputs/validation_sequences_01/selfmotion",
+    "new": "input/stimuli/selfmotion/selfmotion_sequence__80x80__f000400__dt50ms__v01",
+    "kind": "stimulus_bundle"
+  },
+  {
+    "old": "srcipts/bw_grating_output/all_in_one_01",
+    "new": "input/stimuli/grating/grating_sequence__80x80__f004800__dt50ms__v01",
+    "kind": "stimulus_bundle"
+  },
+  {
+    "old": "srcipts/bw_grating_output/sequence_20261019_134626_053",
+    "new": "input/stimuli/grating/grating_sequence__80x80__f004800__dt50ms__v02",
+    "kind": "stimulus_bundle"
+  },
+  {
+    "old": "srcipts/bw_grating_output/sequence_20261024_235711_679",
+    "new": "input/stimuli/grating/grating_sequence__80x80__f004800__dt50ms__v03",
+    "kind": "stimulus_bundle"
+  },
+  {
+    "old": "outputs/daria_walk_gpu_01",
+    "new": "outputs/recordings/daria_walk/legacy__daria_walk_180x144_f000084__py_rate_cuda__r01",
+    "kind": "recording"
+  },
+  {
+    "old": "outputs/davis_paragliding_gpu_70_01",
+    "new": "outputs/recordings/davis_paragliding/legacy__davis_paragliding_854x480_f000070__py_rate_cuda__r01",
+    "kind": "recording"
+  },
+  {
+    "old": "outputs/snowboard_gpu_65_01",
+    "new": "outputs/recordings/snowboard/legacy__snowboard_854x480_f000065__py_rate_cuda__r01",
+    "kind": "recording"
+  },
+  {
+    "old": "outputs/daria_walk_video_01",
+    "new": "outputs/visualizations/daria_walk/legacy__daria_walk_180x144_f000084__py_rate_cuda__r01/mt_stages__v01",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/python_spiking_visualization_01",
+    "new": "outputs/visualizations/grating/legacy__grating_32x32_f000040__py_spike_cpu__r03/mt_spikes__v01",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/daria_walk_mt_comparison_01",
+    "new": "outputs/comparisons/daria_walk/legacy__daria_walk__carlsim_vs_py_rate__v01",
+    "kind": "comparison"
+  },
+  {
+    "old": "outputs/daria_walk_mt_comparison_02",
+    "new": "outputs/comparisons/daria_walk/legacy__daria_walk__carlsim_vs_py_rate__v02",
+    "kind": "comparison"
+  },
+  {
+    "old": "outputs/daria_walk_mt_comparison_corrected_01",
+    "new": "outputs/comparisons/daria_walk/legacy__daria_walk__carlsim_vs_py_rate__v03_corrected",
+    "kind": "comparison"
+  },
+  {
+    "old": "outputs/davis_paragliding_mt_comparison_01",
+    "new": "outputs/comparisons/davis_paragliding/legacy__davis_paragliding__carlsim_vs_py_rate__v01",
+    "kind": "comparison"
+  },
+  {
+    "old": "outputs/snowboard_mt_comparison_01",
+    "new": "outputs/comparisons/snowboard/legacy__snowboard__carlsim_vs_py_rate__v01",
+    "kind": "comparison"
+  },
+  {
+    "old": "outputs/python_spiking_validation_01",
+    "new": "experiments/validation/legacy__grating_32x32_f000040__py_spike_cpu__r01",
+    "kind": "validation"
+  },
+  {
+    "old": "outputs/python_spiking_validation_final",
+    "new": "experiments/validation/legacy__grating_32x32_f000040__py_spike_cpu__r02",
+    "kind": "validation"
+  },
+  {
+    "old": "outputs/python_spiking_validation_final8",
+    "new": "experiments/validation/legacy__grating_32x32_f000040__py_spike_cpu__r03",
+    "kind": "validation"
+  },
+  {
+    "old": "outputs/calibration_pending_report_01",
+    "new": "experiments/validation/legacy__calibration_pending__r01",
+    "kind": "validation"
+  },
+  {
+    "old": "outputs/grating_mt_run01",
+    "new": "experiments/validation/legacy__grating_80x80_f004800__mt_analysis__r01",
+    "kind": "validation"
+  },
+  {
+    "old": "outputs/grating_mt_run02",
+    "new": "experiments/validation/legacy__grating_80x80_f004800__mt_analysis__r02",
+    "kind": "validation"
+  },
+  {
+    "old": "outputs/spiking_validation_cpu_01",
+    "new": "experiments/validation/legacy__controlled_carlsim_cpu__r01",
+    "kind": "validation"
+  },
+  {
+    "old": "outputs/spiking_validation_cpu_02",
+    "new": "experiments/validation/legacy__controlled_carlsim_cpu__r02",
+    "kind": "validation"
+  },
+  {
+    "old": "outputs/spiking_validation_cpu_03",
+    "new": "experiments/validation/legacy__controlled_carlsim_cpu__r03",
+    "kind": "validation"
+  },
+  {
+    "old": "outputs/spiking_validation_cpu_04",
+    "new": "experiments/validation/legacy__controlled_carlsim_cpu__r04",
+    "kind": "validation"
+  },
+  {
+    "old": "outputs/spiking_validation_cpu_05",
+    "new": "experiments/validation/legacy__controlled_carlsim_cpu__r05",
+    "kind": "validation"
+  },
+  {
+    "old": "outputs/spiking_validation_cpu_final",
+    "new": "experiments/validation/legacy__controlled_carlsim_cpu__r06",
+    "kind": "validation"
+  },
+  {
+    "old": "outputs/grating_one_dat_preview_check_01",
+    "new": "experiments/scratch/legacy__grating_single_preview__r01",
+    "kind": "scratch"
+  },
+  {
+    "old": "outputs/grating_sequence_preview_check_01",
+    "new": "experiments/scratch/legacy__grating_sequence_preview__r01",
+    "kind": "scratch"
+  },
+  {
+    "old": "outputs/mt_video_fixture_01",
+    "new": "experiments/scratch/legacy__mt_video_fixture__r01",
+    "kind": "scratch"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/mt_stages.mp4",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/mt_stages.mp4",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_001.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_001.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_002.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_002.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_003.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_003.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_004.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_004.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_005.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_005.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_006.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_006.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_007.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_007.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_008.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_008.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_009.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_009.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_010.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_010.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_011.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_011.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_012.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_012.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_013.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_013.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_014.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_014.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_015.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_015.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_016.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_016.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_017.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_017.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_018.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_018.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_019.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_019.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_020.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_020.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_021.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_021.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_022.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_022.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_023.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_023.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_024.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_024.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_025.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_025.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_026.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_026.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_027.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_027.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_028.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_028.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_029.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_029.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_030.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_030.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_031.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_031.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_032.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_032.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_033.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_033.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_034.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_034.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_035.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_035.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_036.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_036.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_037.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_037.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_038.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_038.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_039.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_039.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_040.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_040.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_041.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_041.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_042.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_042.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_043.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_043.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_044.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_044.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_045.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_045.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_046.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_046.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_047.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_047.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_048.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_048.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_049.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_049.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_050.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_050.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_051.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_051.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_052.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_052.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_053.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_053.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_054.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_054.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_055.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_055.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_056.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_056.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_057.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_057.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_058.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_058.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_059.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_059.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_060.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_060.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_061.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_061.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_062.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_062.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_063.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_063.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_segment_064.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_segment_064.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stage_statistics.csv",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/stage_statistics.csv",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stages.f32",
+    "new": "outputs/recordings/grating/legacy__grating_80x80_f004800__mt_stages__r01/stages.f32",
+    "kind": "recording"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/stages.json",
+    "new": "outputs/recordings/grating/legacy__grating_80x80_f004800__mt_stages__r01/stages.json",
+    "kind": "recording"
+  },
+  {
+    "old": "outputs/grating_mt_video_01/video_config.json",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f004800__mt_stages__r01/mt_stages__v01/video_config.json",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/mt_stage_preview01/INSPECTION.md",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f000300__mt_stages__r01/mt_stages__v01/INSPECTION.md",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/mt_stage_preview01/mt_stages.mp4",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f000300__mt_stages__r01/mt_stages__v01/mt_stages.mp4",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/mt_stage_preview01/stage_segment_001.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f000300__mt_stages__r01/mt_stages__v01/stage_segment_001.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/mt_stage_preview01/stage_segment_002.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f000300__mt_stages__r01/mt_stages__v01/stage_segment_002.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/mt_stage_preview01/stage_segment_003.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f000300__mt_stages__r01/mt_stages__v01/stage_segment_003.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/mt_stage_preview01/stage_segment_004.png",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f000300__mt_stages__r01/mt_stages__v01/stage_segment_004.png",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/mt_stage_preview01/stage_statistics.csv",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f000300__mt_stages__r01/mt_stages__v01/stage_statistics.csv",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/mt_stage_preview01/stages.f32",
+    "new": "outputs/recordings/grating/legacy__grating_80x80_f000300__mt_stages__r01/stages.f32",
+    "kind": "recording"
+  },
+  {
+    "old": "outputs/mt_stage_preview01/stages.json",
+    "new": "outputs/recordings/grating/legacy__grating_80x80_f000300__mt_stages__r01/stages.json",
+    "kind": "recording"
+  },
+  {
+    "old": "outputs/mt_stage_preview01/video_config.json",
+    "new": "outputs/visualizations/grating/legacy__grating_80x80_f000300__mt_stages__r01/mt_stages__v01/video_config.json",
+    "kind": "visualization"
+  },
+  {
+    "old": "outputs/selfmotion_mp4_01",
+    "new": "input/stimuli/selfmotion/selfmotion_suite__80x80__f000080__dt50ms__14cases__v01/preview",
+    "kind": "stimulus_preview"
+  },
+  {
+    "old": "outputs/calibration_texture_01_preview.png",
+    "new": "input/stimuli/texture/texture_calibration__80x80__f000080__dt50ms__8dirs__v01/preview/contact_sheet.png",
+    "kind": "stimulus_preview"
+  },
+  {
+    "old": "outputs/validation_sequences_01/README.md",
+    "new": "input/stimuli/sequence_preparation/legacy_v01/README.md",
+    "kind": "stimulus_metadata"
+  },
+  {
+    "old": "outputs/validation_sequences_01/verification.json",
+    "new": "input/stimuli/sequence_preparation/legacy_v01/verification.json",
+    "kind": "stimulus_metadata"
+  },
+  {
+    "old": "srcipts/carlsimMT/walking/spk_MT1CDS.dat",
+    "new": "outputs/recordings/daria_walk/legacy__daria_walk__carlsim_import__r01/spikes/spk_MT1CDS.dat",
+    "kind": "recording_import"
+  },
+  {
+    "old": "srcipts/carlsimMT/paragliding/spk_MT1CDS.dat",
+    "new": "outputs/recordings/davis_paragliding/legacy__davis_paragliding__carlsim_import__r01/spikes/spk_MT1CDS.dat",
+    "kind": "recording_import"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/spk_MT1CDS.dat",
+    "new": "outputs/recordings/snowboard/legacy__snowboard__carlsim_import__r01/spikes/spk_MT1CDS.dat",
+    "kind": "recording_import"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_001.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_001.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_002.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_002.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_003.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_003.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_004.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_004.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_005.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_005.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_006.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_006.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_007.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_007.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_008.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_008.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_009.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_009.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_010.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_010.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_011.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_011.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_012.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_012.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_013.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_013.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_014.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_014.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_015.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_015.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_016.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_016.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_017.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_017.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_018.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_018.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_019.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_019.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_020.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_020.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_021.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_021.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_022.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_022.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_023.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_023.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_024.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_024.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_025.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_025.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_026.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_026.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_027.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_027.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_028.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_028.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_029.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_029.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_030.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_030.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_031.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_031.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_032.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_032.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_033.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_033.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_034.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_034.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_035.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_035.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_036.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_036.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_037.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_037.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_038.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_038.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_039.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_039.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_040.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_040.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_041.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_041.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_042.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_042.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_043.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_043.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_044.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_044.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_045.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_045.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_046.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_046.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_047.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_047.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_048.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_048.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_049.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_049.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_050.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_050.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_051.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_051.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_052.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_052.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_053.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_053.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_054.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_054.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_055.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_055.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_056.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_056.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_057.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_057.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_058.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_058.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_059.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_059.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_060.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_060.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_061.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_061.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_062.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_062.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_063.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_063.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_064.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_064.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_065.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_065.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_066.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_066.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_067.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_067.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_068.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_068.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_069.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_069.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frame_070.png",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frame_070.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/davis_paraliging/frames_manifest.json",
+    "new": "input/sources/davis_paragliding/legacy_frames_v01/frames_manifest.json",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_001.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_001.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_002.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_002.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_003.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_003.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_004.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_004.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_005.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_005.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_006.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_006.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_007.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_007.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_008.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_008.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_009.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_009.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_010.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_010.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_011.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_011.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_012.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_012.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_013.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_013.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_014.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_014.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_015.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_015.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_016.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_016.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_017.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_017.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_018.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_018.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_019.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_019.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_020.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_020.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_021.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_021.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_022.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_022.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_023.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_023.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_024.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_024.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_025.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_025.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_026.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_026.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_027.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_027.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_028.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_028.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_029.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_029.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_030.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_030.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_031.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_031.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_032.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_032.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_033.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_033.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_034.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_034.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_035.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_035.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_036.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_036.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_037.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_037.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_038.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_038.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_039.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_039.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_040.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_040.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_041.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_041.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_042.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_042.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_043.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_043.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_044.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_044.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_045.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_045.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_046.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_046.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_047.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_047.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_048.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_048.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_049.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_049.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_050.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_050.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_051.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_051.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_052.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_052.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_053.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_053.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_054.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_054.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_055.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_055.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_056.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_056.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_057.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_057.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_058.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_058.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_059.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_059.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_060.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_060.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_061.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_061.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_062.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_062.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_063.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_063.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_064.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_064.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frame_065.png",
+    "new": "input/sources/snowboard/legacy_frames_v01/frame_065.png",
+    "kind": "source_frames"
+  },
+  {
+    "old": "srcipts/carlsimMT/snowboard/frames_manifest.json",
+    "new": "input/sources/snowboard/legacy_frames_v01/frames_manifest.json",
+    "kind": "source_frames"
+  },
+  {
+    "old": "outputs/build_carlsim_mt",
+    "new": "build/legacy_20261107/build_carlsim_mt",
+    "kind": "build_snapshot"
+  },
+  {
+    "old": "outputs/carlsim_cpu_build",
+    "new": "build/legacy_20261107/carlsim_cpu_build",
+    "kind": "build_snapshot"
+  },
+  {
+    "old": "outputs/export_fixture.exe",
+    "new": "build/legacy_20261107/export_fixture.exe",
+    "kind": "build_snapshot"
+  },
+  {
+    "old": "outputs/matlab_preferences",
+    "new": "cache/matlab/preferences_legacy_20261107",
+    "kind": "local_state"
+  },
+  {
+    "old": "MathWorks",
+    "new": "cache/matlab/MathWorks_legacy_20261107",
+    "kind": "local_state"
+  },
+  {
+    "old": "outputs/calibration_bundle_01.tar.gz",
+    "new": "exports/legacy_20261107/calibration_bundle_01.tar.gz",
+    "kind": "export"
+  },
+  {
+    "old": "outputs/calibration_bundle_01.tar.gz.sha256",
+    "new": "exports/legacy_20261107/calibration_bundle_01.tar.gz.sha256",
+    "kind": "export"
+  },
+  {
+    "old": "outputs/matlab_bw_grating_02_bundle.zip.sha256",
+    "new": "exports/legacy_20261107/matlab_bw_grating_02_bundle.zip.sha256",
+    "kind": "export"
+  },
+  {
+    "old": "outputs/mstd_v1_server_v050.tar.gz",
+    "new": "exports/legacy_20261107/mstd_v1_server_v050.tar.gz",
+    "kind": "export"
+  },
+  {
+    "old": "outputs/selfmotion_baseline_01.tar.gz",
+    "new": "exports/legacy_20261107/selfmotion_baseline_01.tar.gz",
+    "kind": "export"
+  },
+  {
+    "old": "outputs/selfmotion_baseline_01.tar.gz.sha256",
+    "new": "exports/legacy_20261107/selfmotion_baseline_01.tar.gz.sha256",
+    "kind": "export"
+  },
+  {
+    "old": "outputs/selfmotion_mp4_01.zip",
+    "new": "exports/legacy_20261107/selfmotion_mp4_01.zip",
+    "kind": "export"
+  },
+  {
+    "old": "outputs/grating_one_dat_run.log",
+    "new": "experiments/scratch/legacy__generation_logs__r01/grating_one_dat_run.log",
+    "kind": "scratch"
+  },
+  {
+    "old": "outputs/grating_sequence_run.log",
+    "new": "experiments/scratch/legacy__generation_logs__r01/grating_sequence_run.log",
+    "kind": "scratch"
+  },
+  {
+    "old": "outputs/matlab_bw_grating_01_run.log",
+    "new": "experiments/scratch/legacy__generation_logs__r01/matlab_bw_grating_01_run.log",
+    "kind": "scratch"
+  },
+  {
+    "old": "outputs/matlab_bw_grating_02_run.log",
+    "new": "experiments/scratch/legacy__generation_logs__r01/matlab_bw_grating_02_run.log",
+    "kind": "scratch"
+  },
+  {
+    "old": "outputs/python_spiking_init80.json",
+    "new": "experiments/validation/legacy__python_spiking_init80__r01/report.json",
+    "kind": "validation"
+  },
+  {
+    "old": "outputs/mt_stages.mp4",
+    "new": "outputs/visualizations/unresolved/legacy__mt_stages__v01/mt_stages.mp4",
+    "kind": "unresolved"
+  },
+  {
+    "old": "outputs/davis_paragliding_video_70_01",
+    "new": "experiments/scratch/legacy__empty_davis_paragliding_video_70_01",
+    "kind": "empty_attempt"
+  },
+  {
+    "old": "outputs/snowboard_video_65_01",
+    "new": "experiments/scratch/legacy__empty_snowboard_video_65_01",
+    "kind": "empty_attempt"
+  }
+]

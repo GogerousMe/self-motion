@@ -33,7 +33,7 @@
 
 预览关闭后生成继续；预览原速属于近似墙钟播放，不是实验显示计时器。预览会在函数结束时关闭。本功能显示输入刺激，不显示神经元响应。
 
-每次运行在 `srcipts/bw_grating_output/sequence_时间戳/` 创建新目录，包含：
+每次运行在 `input/stimuli/grating/grating_sequence__宽x高__f帧数__dt间隔ms__v01__t时间戳/` 创建新目录，包含：
 
 - 唯一刺激文件`all_stimuli.dat`，25字节VisualStimulus v1小端文件头，type=0，按帧逐行写入；不额外翻转纵轴。
 - `all_stimuli_segments.csv`，记录所有光栅和黑场的起止帧、时间、速度、方向槽位。

@@ -16,3 +16,14 @@ data/raw/
 # Local MATLAB state and generated stimulus bundles
 /MathWorks/
 /srcipts/bw_grating_output/
+
+# Managed research data: keep lightweight indexes, never bulk artifacts.
+/input/*
+!/input/registry.csv
+!/input/README.md
+/experiments/*
+!/experiments/registry.csv
+!/experiments/README.md
+/cache/
+/exports/
+*.events

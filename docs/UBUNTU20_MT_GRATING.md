@@ -32,7 +32,7 @@ MSTD/
     README.md
     THIRD_PARTY_NOTICES.md
     docs/
-    srcipts/bw_grating_output/sequence_20261019_134626_053/
+    input/stimuli/grating/grating_sequence__80x80__f004800__dt50ms__v02/
       all_stimuli.dat
       all_stimuli_segments.csv
       manifest.json
@@ -40,7 +40,7 @@ MSTD/
 
 最小运行集为 `src/mstd/`、投影 JSON、分析脚本和刺激目录三个文件。首次建议同步 src/、configs/、examples/、tests/、docs/ 和项目说明文件，并单独同步本次使用的刺激目录。`srcipts` 是当前项目实际目录名，保留原拼写。
 
-不需要上传 `.git/`、`.venv/`、`__pycache__/`、`MathWorks/`、MATLAB 用户偏好／证书、既往 outputs/、全部参考 PDF。已有输入 DAT 时不需要上传 MATLAB 生成器。
+不需要上传 `.git/`、`.venv/`、`__pycache__/`、`cache/matlab/MathWorks_legacy_20261107/`、MATLAB 用户偏好／证书、既往 outputs/、全部参考 PDF。已有输入 DAT 时不需要上传 MATLAB 生成器。
 
 服务器原有 CARLsim/CUDA/修改版 MotionEnergy 工程继续使用。该工程及其库不包含在当前 Python 项目中；仅复制本目录不能从零建立 V1 编译环境。其 CUDA、驱动及编译器版本沿用服务器已验证环境，需从实际构建日志核实，当前不臆测兼容版本。
 
@@ -94,7 +94,7 @@ python -m unittest discover -s tests -v
 
 ## 4. 当前刺激与服务器 V1 采集要求
 
-本轮使用 `srcipts/bw_grating_output/sequence_20261019_134626_053/` 的三件套，保留原清单与 CSV 内容：
+本轮使用 `input/stimuli/grating/grating_sequence__80x80__f004800__dt50ms__v02/` 的三件套，保留原清单与 CSV 内容：
 
 | 参数 | 值 |
 |---|---|
@@ -134,14 +134,14 @@ python -m mstd inspect-spikes data/raw/grating_run01/spk_V1.dat
 
 ```bash
 python examples/analyze_mt_gratings.py \
-  --manifest srcipts/bw_grating_output/sequence_20261019_134626_053/manifest.json \
+  --manifest input/stimuli/grating/grating_sequence__80x80__f004800__dt50ms__v02/manifest.json \
   --spikes data/raw/grating_run01/spk_V1.dat \
   --projection-config configs/v1_projection.json \
   --projection motionProj1 \
   --warmup-ms 1000 \
   --border 4 \
   --radius 1 \
-  --output outputs/grating_mt_run01
+  --output experiments/validation/legacy__grating_80x80_f004800__mt_analysis__r01
 ```
 
 程序从清单读取总时长和帧时长，完整消耗事件流并保留空窗／静默尾段。它验证输入 DAT 的尺寸和哈希、分段覆盖、V1 网格、事件时间和编号。不要求相机内参，因为这是图像方向测试。
@@ -161,7 +161,7 @@ python examples/analyze_mt_gratings.py \
 ```bash
 pgrep -af '[a]nalyze_mt_gratings.py'
 top -u "$USER"
-watch -n 10 'wc -l outputs/grating_mt_run01/frames.csv; tail -n 1 outputs/grating_mt_run01/frames.csv'
+watch -n 10 'wc -l experiments/validation/legacy__grating_80x80_f004800__mt_analysis__r01/frames.csv; tail -n 1 experiments/validation/legacy__grating_80x80_f004800__mt_analysis__r01/frames.csv'
 ```
 
 CSV最后一行开头的 start_ms/end_ms 表示已写出的仿真时间窗，完整数据应有4800行加表头。旧版 CSV 有缓冲，行数会分批增长；一小段时间不变不等于卡住。高单核 CPU 占用且时间窗持续推进，通常说明还在计算。低CPU且长时间无进展时，再看进程状态和数据盘I/O；没有找到进程时检查原终端报错及是否已经生成 report.json。
@@ -198,7 +198,7 @@ CSV最后一行开头的 start_ms/end_ms 表示已写出的仿真时间窗，完
 python -m mstd analyze-calibration /path/calibration_grating/manifest.json \
   --projection-config configs/v1_projection.json \
   --projection motionProj1 \
-  --output outputs/independent_projection_run01
+  --output experiments/scratch/manual__independent_projection_run01__r01
 ```
 
 先在清单每个 run 的 `spikes` 中填写对应响应相对路径，并保留原刺激文件。该命令给出投影方向报告，不能称为实际 MT 完整测试。新连续分析脚本仅接受 v2 连续清单；两种方案不要互换清单。

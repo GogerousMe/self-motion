@@ -18,9 +18,9 @@ Python生成真正的灰度刺激帧，送入你修改的C++ V1；人工滤波�
 
 ```powershell
 $env:PYTHONPATH = (Join-Path (Get-Location) 'src')
-python -m mstd generate-calibration --output outputs/calibration_grating_01
-python -m mstd generate-calibration --output outputs/calibration_texture_01 --kind texture
-python examples/package_calibration.py outputs/calibration_grating_01 outputs/calibration_texture_01 --output outputs/calibration_bundle_01.tar.gz
+python -m mstd generate-calibration --output input/stimuli/grating/grating_calibration__80x80__f000080__dt50ms__8dirs__v01
+python -m mstd generate-calibration --output input/stimuli/texture/texture_calibration__80x80__f000080__dt50ms__8dirs__v01 --kind texture
+python examples/package_calibration.py input/stimuli/grating/grating_calibration__80x80__f000080__dt50ms__8dirs__v01 input/stimuli/texture/texture_calibration__80x80__f000080__dt50ms__8dirs__v01 --output exports/legacy_20261107/calibration_bundle_01.tar.gz
 ```
 
 输出路径不可重复使用。包内只有刺激、清单、预览、采集脚本及本说明，没有历史V1响应。
@@ -93,8 +93,8 @@ python3 collect_calibration.py --suite texture --executable /absolute/path/v1_ca
 把完整grating/和texture/目录（含更新的manifest及responses）拷贝回本机，例如outputs/collected_grating_01和outputs/collected_texture_01。
 
 ```powershell
-python -m mstd analyze-calibration outputs/collected_grating_01/manifest.json --projection-config configs/v1_projection.json --projection motionProj1 --output outputs/grating_report_01
-python -m mstd analyze-calibration outputs/collected_texture_01/manifest.json --projection-config configs/v1_projection.json --projection motionProj1 --output outputs/texture_report_01
+python -m mstd analyze-calibration experiments/scratch/manual__collected_grating_01__r01/manifest.json --projection-config configs/v1_projection.json --projection motionProj1 --output experiments/scratch/manual__grating_report_01__r01
+python -m mstd analyze-calibration experiments/scratch/manual__collected_texture_01__r01/manifest.json --projection-config configs/v1_projection.json --projection motionProj1 --output experiments/scratch/manual__texture_report_01__r01
 ```
 
 报告包含report.json和directions.csv：每个已知方向的八通道平均响应、84个滤波器平均活动率、胜出方向、环形角误差、方向集中度。

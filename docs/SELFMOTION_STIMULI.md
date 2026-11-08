@@ -65,7 +65,7 @@ R=45m、v=3m/s时，角速度约3.82°/s。视线偏角与路径旋转分别记�
 
 ```powershell
 $env:PYTHONPATH = (Join-Path (Get-Location) 'src')
-python -m mstd generate-selfmotion --output outputs/selfmotion_01 --video
+python -m mstd generate-selfmotion --output input/stimuli/selfmotion/selfmotion_suite__80x80__f000080__dt50ms__14cases__v01 --video
 ```
 
 视频导出需要PATH中存在ffmpeg；模型和DAT生成无需新增Python依赖。

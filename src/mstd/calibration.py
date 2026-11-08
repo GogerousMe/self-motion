@@ -1,6 +1,7 @@
 """Known-direction visual stimuli and spike-based projection calibration.
 
-No V1 simulator is bundled: generated DATs must run through the actual C++ V1.
+Generated DATs can run through the optional mstd.v1 frontend. The actual C++ V1
+is still required as the independent source-equivalence reference.
 Image angles are clockwise from right (x-right, y-down).
 """
 import hashlib

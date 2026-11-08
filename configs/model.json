@@ -1,0 +1,25 @@
+{
+  "schema": "mstd-model-v1",
+  "input": {"kind": "stimulus_dat", "path": ""},
+  "output": "experiments/scratch/manual__model__r01",
+  "backend": "numpy",
+  "device": "cpu",
+  "frame_ms": 50,
+  "max_frames": null,
+  "projection_config": "configs/v1_projection.json",
+  "projection": "motionProj1",
+  "intrinsics": null,
+  "mt_radius": 1,
+  "mstd_template_count": 9,
+  "layers": {"v1": true, "mt": true, "mstd": true},
+  "monitors": {
+    "v1": true,
+    "mt_projection": true,
+    "mt_pooling": true,
+    "mt_normalization": true,
+    "mstd": true,
+    "summary": true,
+    "every_n_frames": 1
+  },
+  "progress_every": 20
+}

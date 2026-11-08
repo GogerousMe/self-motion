@@ -27,7 +27,7 @@ python examples/visualize_mt_gratings.py \
   --mt-spikes /path/to/ACTUAL_MT_SPIKES.dat \
   --mt-directions-deg 0 315 270 225 180 135 90 45 \
   --colormap jet --vmax 100 \
-  --output outputs/actual_mt_hz_video01
+  --output experiments/scratch/manual__actual_mt_hz_video01__r01
 ```
 
 若只有当前V1脉冲文件，也可增加 `--response projected-hz --colormap jet --vmax 100`，绘制清楚标注为投影率的八方向热图；没有真实MT脉冲参与这种模式。视频不显示V1原始84通道。
@@ -78,13 +78,13 @@ conda activate mstd
 cd /data/workspace/wyq/mstd/code
 export PYTHONPATH="$PWD/src"
 python examples/visualize_mt_gratings.py \
-  --manifest srcipts/bw_grating_output/sequence_20261019_134626_053/manifest.json \
+  --manifest input/stimuli/grating/grating_sequence__80x80__f004800__dt50ms__v02/manifest.json \
   --spikes trail/8directions/spk_V1.dat \
   --projection-config configs/v1_projection.json \
   --projection motionProj1 \
   --max-frames 300 \
   --progress-every 20 \
-  --output outputs/grating_mt_video_preview01
+  --output experiments/scratch/manual__grating_mt_video_preview01__r01
 ```
 
 `--max-frames`只处理前缀，不代表完成原始整文件验证。默认不指定时导出全部4800帧。目录必须不存在；失败可能留下半成品视频或缓存，但不会生成有效缓存JSON，重试使用新目录。
@@ -95,11 +95,11 @@ python examples/visualize_mt_gratings.py \
 
 ```bash
 python examples/visualize_mt_gratings.py \
-  --manifest srcipts/bw_grating_output/sequence_20261019_134626_053/manifest.json \
+  --manifest input/stimuli/grating/grating_sequence__80x80__f004800__dt50ms__v02/manifest.json \
   --spikes trail/8directions/spk_V1.dat \
   --projection-config configs/v1_projection.json \
   --projection motionProj1 \
-  --output outputs/grating_mt_video01
+  --output experiments/scratch/manual__grating_mt_video01__r01
 ```
 
 输出：
@@ -117,11 +117,11 @@ python examples/visualize_mt_gratings.py \
 
 ```bash
 python examples/visualize_mt_gratings.py \
-  --manifest srcipts/bw_grating_output/sequence_20261019_134626_053/manifest.json \
-  --cache outputs/grating_mt_video01/mt_activity.json \
+  --manifest input/stimuli/grating/grating_sequence__80x80__f004800__dt50ms__v02/manifest.json \
+  --cache experiments/scratch/manual__grating_mt_video01__r01/mt_activity.json \
   --vmax 0.6 \
   --playback-rate 2 \
-  --output outputs/grating_mt_video_bright02
+  --output experiments/scratch/manual__grating_mt_video_bright02__r01
 ```
 
 2倍播放为40fps、120秒，帧和方向仍一一对应。重绘校验缓存的清单、分段表与缓存文件哈希；不修改原响应，不会重复存储一份缓存。仅预览生成的缓存只能重绘该前缀，不能产生其后未计算的帧。

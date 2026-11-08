@@ -98,8 +98,8 @@ B0 可与 Linux 采集并行进行。A 未通过时，可以诊断 B1，但不�
 | A3 | 与运动纹理配对的静态纹理 | 1 或多个种子 | 待补充；检查启动与背景活动 |
 | A4 | 同类纹理的多速度条件 | 后续确定 | 待补充；基线后增加，如 0.5、1、2 px/frame |
 
-现有目录：`outputs/calibration_texture_01/`、`outputs/calibration_grating_01/`。
-现有打包文件：`outputs/calibration_bundle_01.tar.gz`。
+现有目录：`input/stimuli/texture/texture_calibration__80x80__f000080__dt50ms__8dirs__v01/`、`input/stimuli/grating/grating_calibration__80x80__f000080__dt50ms__8dirs__v01/`。
+现有打包文件：`exports/legacy_20261107/calibration_bundle_01.tar.gz`。
 
 ### 4.2 分析要求
 
@@ -144,7 +144,7 @@ B0 可与 Linux 采集并行进行。A 未通过时，可以诊断 B1，但不�
 | `ground_heading_left10` | 朝向固定，平移速度向左偏 10° | 航向接近 −10° |
 | `ground_heading_right10` | 朝向固定，平移速度向右偏 10° | 航向接近 ＋10° |
 
-现有目录：`outputs/selfmotion_01/`；第一批包：`outputs/selfmotion_baseline_01.tar.gz`。
+现有目录：`input/stimuli/selfmotion/selfmotion_suite__80x80__f000080__dt50ms__14cases__v01/`；第一批包：`exports/legacy_20261107/selfmotion_baseline_01.tar.gz`。
 参数与真值见配套 `manifest.json`、`intrinsics.json`、`*.truth.jsonl`。
 
 **斜向平移不是转弯。** 本轮左右条件保持相机朝向固定，不能解释为左转／右转识别。

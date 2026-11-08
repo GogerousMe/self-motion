@@ -178,8 +178,8 @@ def prepare(texture_suite, selfmotion_suite, output):
 
 def main():
     p=argparse.ArgumentParser(description=__doc__)
-    p.add_argument('--texture-suite',default='outputs/calibration_texture_01')
-    p.add_argument('--selfmotion-suite',default='outputs/selfmotion_01')
+    p.add_argument('--texture-suite',default='input/stimuli/texture/texture_calibration__80x80__f000080__dt50ms__8dirs__v01')
+    p.add_argument('--selfmotion-suite',default='input/stimuli/selfmotion/selfmotion_suite__80x80__f000080__dt50ms__14cases__v01')
     p.add_argument('--output',required=True)
     a=p.parse_args()
     print(json.dumps(prepare(a.texture_suite,a.selfmotion_suite,a.output),indent=2))

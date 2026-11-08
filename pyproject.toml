@@ -4,13 +4,20 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mstd-self-motion"
-version = "0.4.0"
-description = "Auditable Python MT-MSTd reference model with a C++ V1 interchange contract"
+version = "0.5.1"
+description = "Streaming MotionEnergy V1 and auditable MT-MSTd rate reference model"
 requires-python = ">=3.10"
-dependencies = []
+dependencies = ["numpy>=1.24"]
+
+[project.optional-dependencies]
+v1 = ["numpy>=1.24"]
+v1-gpu = ["numpy>=1.24", "torch>=2.2"]
+plots = ["matplotlib>=3.7"]
+images = ["Pillow>=9.1"]
 
 [project.scripts]
 mstd = "mstd.cli:main"
+mstd-v1 = "mstd.v1_cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

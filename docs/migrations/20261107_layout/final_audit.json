@@ -1,0 +1,12 @@
+{
+  "complete": true,
+  "moved_files_checked": 1862,
+  "hash_all": false,
+  "stimulus_hashes_checked": 102,
+  "artifact_links_checked": 40,
+  "unresolved_artifacts": [
+    "outputs/comparisons/daria_walk/legacy__daria_walk__carlsim_vs_py_rate__v03_corrected",
+    "outputs/comparisons/snowboard/legacy__snowboard__carlsim_vs_py_rate__v01",
+    "outputs/visualizations/unresolved/legacy__mt_stages__v01"
+  ]
+}

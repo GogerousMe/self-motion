@@ -6,7 +6,7 @@
 
 ```matlab
 addpath('matlab');
-result = generate_bw_grating_suite('outputs/matlab_bw_grating_01');
+result = generate_bw_grating_suite('input/stimuli/grating/bw_grating_suite__80x80__f000080__dt50ms__v01');
 ```
 
 输出目录必须不存在。重新生成请使用新目录名，避免覆盖已有采集输入。
@@ -32,7 +32,7 @@ result = generate_bw_grating_suite('outputs/matlab_bw_grating_01');
 ## 自定义
 
 ```matlab
-result = generate_bw_grating_suite('outputs/matlab_bw_grating_02', ...
+result = generate_bw_grating_suite('input/stimuli/grating/bw_grating_suite__80x80__f000080__dt50ms__v02', ...
     'Size', [80 80], ...
     'Frames', 80, ...
     'FrameMs', 50, ...

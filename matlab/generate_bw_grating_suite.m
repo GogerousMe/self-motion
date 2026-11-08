@@ -2,7 +2,7 @@ function result = generate_bw_grating_suite(outputDir, varargin)
 %GENERATE_BW_GRATING_SUITE Create new binary gratings for CARLsim V1.
 % Run from the project root:
 %   addpath('matlab');
-%   result = generate_bw_grating_suite('outputs/matlab_bw_grating_01');
+%   result = generate_bw_grating_suite('input/stimuli/grating/bw_grating_suite__80x80__f000080__dt50ms__v01');
 % All angles use image coordinates: 0 right, 90 down, clockwise positive.
 % Speed is normal to the bars, in pixels/frame (not pixels/second).
 % Written for MATLAB R2023b; no VisualStimulus classes or toolboxes required.

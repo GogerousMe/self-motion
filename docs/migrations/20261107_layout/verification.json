@@ -1,0 +1,9 @@
+{
+  "complete": true,
+  "moved_operations": 287,
+  "verified_files": 1862,
+  "verified_bytes": 10719701574,
+  "stimulus_files": 102,
+  "content_changed": false,
+  "note": "All moved files including historical JSON/CSV/binaries retain their SHA256. New indexes are additive."
+}

@@ -1,0 +1,50 @@
+{
+  "targeted_unittests_passed": 13,
+  "checks": [
+    {
+      "path": "experiments/scratch/20261107__layout_mt_replay__r01",
+      "video_probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "width": 1440,
+            "height": 1230,
+            "nb_read_frames": "2"
+          }
+        ]
+      },
+      "passed": true
+    },
+    {
+      "path": "experiments/scratch/20261107__layout_cache_replay__r01",
+      "video_probe": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "width": 1440,
+            "height": 1230,
+            "nb_read_frames": "2"
+          }
+        ]
+      },
+      "passed": true
+    },
+    {
+      "path": "experiments/validation/20261107__layout_carlsim_cpu__r01",
+      "native_checks": {
+        "zero_input_no_events": true,
+        "input_count_within_5_sigma": true,
+        "inhibitory_cells_fire": true,
+        "excitatory_cells_fire": true,
+        "inhibition_reduces_exc": true,
+        "same_seed_exact_events": true,
+        "no_spatial_crosstalk": true
+      },
+      "passed": true
+    }
+  ],
+  "build": "build/carlsim_mt; freshly configured against relocated preserved CARLsim library",
+  "note": "MATLAB naming entry inspected but MATLAB UI was not executed. External server files were not moved."
+}

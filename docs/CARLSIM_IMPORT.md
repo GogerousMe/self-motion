@@ -10,8 +10,8 @@
 ```powershell
 $env:PYTHONPATH = (Join-Path (Get-Location) 'src')
 python -m mstd inspect-spikes "YOUR_PATH/spk_V1.dat" --max-events 10000
-python -m mstd convert-spikes "YOUR_PATH/spk_V1.dat" --output outputs/converted_01 --projection-config configs/v1_projection.json --projection motionProj1 --duration-ms 4200 --bin-ms 50 --intrinsics YOUR_INTRINSICS.json
-python -m mstd run outputs/converted_01 --output outputs/inference_01 --last-frame-duration-s 0.05
+python -m mstd convert-spikes "YOUR_PATH/spk_V1.dat" --output experiments/scratch/manual__converted_01__r01 --projection-config configs/v1_projection.json --projection motionProj1 --duration-ms 4200 --bin-ms 50 --intrinsics YOUR_INTRINSICS.json
+python -m mstd run experiments/scratch/manual__converted_01__r01 --output experiments/scratch/manual__inference_01__r01 --last-frame-duration-s 0.05
 ```
 
 4200ms 仅为命令示例，必须替换为真实仿真总时长；不能依据最后放电推定。

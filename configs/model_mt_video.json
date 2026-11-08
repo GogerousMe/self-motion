@@ -1,0 +1,19 @@
+{
+  "schema": "mstd-model-v1",
+  "frame_ms": 50,
+  "max_frames": null,
+  "projection_config": "configs/v1_projection.json",
+  "projection": "motionProj1",
+  "mt_radius": 1,
+  "layers": {"v1": true, "mt": true, "mstd": false},
+  "monitors": {
+    "v1": false,
+    "mt_projection": true,
+    "mt_pooling": true,
+    "mt_normalization": true,
+    "mstd": false,
+    "summary": true,
+    "every_n_frames": 1
+  },
+  "progress_every": 20
+}

@@ -1,0 +1,31 @@
+cmake_minimum_required(VERSION 3.16)
+project(mstd_carlsim_mt LANGUAGES CXX)
+set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS main.cpp)
+set(CARLSIM_INCLUDE_DIR "" CACHE PATH "Installed CARLsim include directory")
+set(CARLSIM_LIBRARY "" CACHE FILEPATH "Existing CARLsim library")
+set(CARLSIM_RUNTIME_LIBRARY "" CACHE FILEPATH "Optional runtime DLL when linking an import library")
+set(CARLSIM_EXTRA_LIBRARIES "" CACHE STRING "Additional installed library dependencies")
+set(CARLSIM_EXTRA_INCLUDE_DIRS "" CACHE STRING "Extra header directories for an uninstalled source build")
+if(NOT EXISTS "${CARLSIM_INCLUDE_DIR}/carlsim.h" OR NOT EXISTS "${CARLSIM_LIBRARY}")
+  message(FATAL_ERROR "Supply CARLSIM_INCLUDE_DIR and CARLSIM_LIBRARY from the existing CARLsim installation")
+endif()
+add_executable(carlsim_mt main.cpp)
+target_compile_features(carlsim_mt PRIVATE cxx_std_11)
+target_include_directories(carlsim_mt PRIVATE "${CARLSIM_INCLUDE_DIR}" ${CARLSIM_EXTRA_INCLUDE_DIRS})
+target_link_libraries(carlsim_mt PRIVATE "${CARLSIM_LIBRARY}" ${CARLSIM_EXTRA_LIBRARIES})
+file(SHA256 "${CARLSIM_LIBRARY}" CARLSIM_LIB_HASH)
+file(SHA256 "${CARLSIM_INCLUDE_DIR}/carlsim.h" CARLSIM_HEADER_HASH)
+file(SHA256 "${CMAKE_CURRENT_SOURCE_DIR}/main.cpp" BRIDGE_HASH)
+set(CARLSIM_RUNTIME_HASH "not supplied")
+if(EXISTS "${CARLSIM_RUNTIME_LIBRARY}")
+  file(SHA256 "${CARLSIM_RUNTIME_LIBRARY}" CARLSIM_RUNTIME_HASH)
+  # Keep a relocated Windows bridge runnable without a legacy outputs path.
+  if(WIN32)
+    add_custom_command(TARGET carlsim_mt POST_BUILD
+      COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "${CARLSIM_RUNTIME_LIBRARY}" "$<TARGET_FILE_DIR:carlsim_mt>"
+      VERBATIM)
+  endif()
+endif()
+file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/build_info.json"
+  "{\"library_sha256\":\"${CARLSIM_LIB_HASH}\",\"runtime_library_sha256\":\"${CARLSIM_RUNTIME_HASH}\",\"header_sha256\":\"${CARLSIM_HEADER_HASH}\",\"bridge_source_sha256\":\"${BRIDGE_HASH}\"}\n")

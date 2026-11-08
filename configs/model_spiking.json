@@ -1,0 +1,16 @@
+{
+  "schema": "mstd-model-v1",
+  "input": {"kind": "stimulus_dat", "path": ""},
+  "output": "experiments/scratch/manual__carlsim__r01",
+  "backend": "numpy",
+  "device": "cpu",
+  "frame_ms": 50,
+  "max_frames": null,
+  "mt_backend": "carlsim",
+  "mt_radius": 0,
+  "projection_config": "configs/v1_projection.json",
+  "projection": "motionProj1",
+  "carlsim": {"executable": "build/carlsim_mt/carlsim_mt", "mode": "cpu", "seed": 42, "v1_rate_scale": 1.0, "callback_layout": "legacy_mapped", "inhibition_enabled": true},
+  "monitors": {"every_n_frames": 1},
+  "progress_every": 10
+}

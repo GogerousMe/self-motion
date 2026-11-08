@@ -1,3 +1,5 @@
+> 路径说明（2026-11-07）：本文保留历史实验路径；当前存放位置请查 [文件规范](FILE_ORGANIZATION.md) 和 [迁移映射](migrations/20261107_layout/paths.csv)。
+
 # 首版验证记录
 
 > 2026-10-19 update: SpikeMonitor DAT import and 84-to-8 projection are implemented. See [M1 validation](M1_VALIDATION.md) and [import guide](CARLSIM_IMPORT.md). Earlier notes below describe the v0.1 milestone.

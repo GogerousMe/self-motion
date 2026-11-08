@@ -2,6 +2,7 @@
 
 Requires Python >=3.10 and ffmpeg. MT model outputs are not simulated spikes.
 Stores all three stages for later --cache rendering without rereading V1.
+--recording renders saved Python-model monitors directly, without V1 spikes.
 """
 import argparse
 from array import array
@@ -37,11 +38,12 @@ def compute_stages(spec, counts, duration_ms, projection, radius):
 
 def main(argv=None):
     p = argparse.ArgumentParser(description=__doc__)
-    p.add_argument('--manifest', required=True)
+    p.add_argument('--manifest', help='matching sequence manifest; optional with --recording')
     p.add_argument('--stimulus', help='actual stimulus path; must match manifest SHA256')
     source = p.add_mutually_exclusive_group(required=True)
     source.add_argument('--spikes', help='V1 W x H x 84 SpikeMonitor DAT')
     source.add_argument('--cache', help='stages.json from an earlier completed comparison')
+    source.add_argument('--recording', help='run_model.py output directory; render its saved MT monitors')
     p.add_argument('--projection-config', default='configs/v1_projection.json')
     p.add_argument('--projection', default='motionProj1')
     p.add_argument('--radius', type=int, default=1)
@@ -60,6 +62,11 @@ def main(argv=None):
     ffmpeg = shutil.which(a.ffmpeg)
     if not ffmpeg:
         p.error('ffmpeg is required')
+    if a.recording:
+        from render_model_mt import render_recording
+        return render_recording(a, ffmpeg)
+    if not a.manifest:
+        p.error('--manifest is required with --spikes or --cache')
     manifest = Path(a.manifest)
     meta = json.loads(manifest.read_text(encoding='utf-8-sig'))
     direction_schema = (meta.get('schema') == 'matlab-sequential-binary-gratings-v2'
