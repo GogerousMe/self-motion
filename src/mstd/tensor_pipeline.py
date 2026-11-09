@@ -7,6 +7,7 @@ from math import atan, degrees, isfinite
 import numpy as np
 
 from .mstd import DynamicsConfig
+from .validity import ValidityConfig, decide_validity
 
 
 class DirectionMT:
@@ -62,11 +63,12 @@ class DirectionMT:
 
 class TensorMSTd:
     """Same fixed radial templates and Euler update as mstd.MSTd."""
-    def __init__(self,ops,spec,centers,config=None):
+    def __init__(self,ops,spec,centers,config=None,validity_config=None):
         self.ops,self.spec,self.centers = ops,spec,tuple(tuple(c) for c in centers)
         if len(self.centers)<2 or len(set(self.centers))!=len(self.centers):
             raise ValueError('at least two distinct centers required')
         self.config = config or DynamicsConfig()
+        self.validity_config = validity_config or ValidityConfig()
         y,x = np.indices((spec.height,spec.width),dtype=np.float64)
         patterns = []
         for cx,cy in self.centers:
@@ -111,7 +113,20 @@ class TensorMSTd:
         order = sorted(range(len(activities)),key=activities.__getitem__,reverse=True)
         winner,runner = order[:2]
         margin = activities[winner]-activities[runner]
-        valid = mt['evidence']>=cfg.min_evidence and margin>=cfg.min_margin
+        scores = op.host(score).tolist()
+        uniform_score = active_fraction = None
+        if self.validity_config.mode == 'geometry_support':
+            if op.torch:
+                amplitude = (v*v).sum(dim=0).sqrt()
+                uniform = v.sum(dim=(1,2)).square().sum().sqrt()/norm.clamp_min(1e-12)
+                fraction = (amplitude >= self.validity_config.local_evidence_threshold).float().mean()
+                uniform_score, active_fraction = op.host(op.torch.stack((uniform, fraction))).tolist()
+            else:
+                amplitude = np.sqrt((v*v).sum(axis=0))
+                uniform_score = float(np.linalg.norm(v.sum(axis=(1,2)))/max(float(norm), 1e-12))
+                active_fraction = float((amplitude >= self.validity_config.local_evidence_threshold).mean())
+        valid, validity = decide_validity(self.validity_config, cfg, mt['evidence'], margin,
+                                          scores, winner, uniform_score, active_fraction)
         cx,cy = self.centers[winner]
         calibrated = all(getattr(self.spec,k,None) is not None for k in ('fx_px','fy_px','cx_px','cy_px'))
         bearing_valid = valid and calibrated
@@ -119,4 +134,4 @@ class TensorMSTd:
                 'alpha_x_deg':degrees(atan((cx-self.spec.cx_px)/self.spec.fx_px)) if bearing_valid else None,
                 'alpha_y_deg':degrees(atan((cy-self.spec.cy_px)/self.spec.fy_px)) if bearing_valid else None,
                 'winner_index':winner,'margin':margin,'mt_evidence':mt['evidence'],
-                'activity':activities,'template_scores':op.host(score).tolist()}
+                'activity':activities,'template_scores':scores,'validity':validity}

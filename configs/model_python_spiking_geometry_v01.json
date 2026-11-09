@@ -1,0 +1,23 @@
+{
+  "schema": "mstd-model-v1",
+  "input": {"kind": "stimulus_dat", "path": ""},
+  "output": "experiments/scratch/manual__py_spike_geometry__r01",
+  "backend": "torch",
+  "device": "cuda",
+  "frame_ms": 50,
+  "max_frames": null,
+  "mt_backend": "python_spiking",
+  "mt_radius": 0,
+  "projection_config": "configs/v1_projection.json",
+  "projection": "motionProj1",
+  "spiking": {"dt_ms": 1.0, "substeps": 4, "seed": 42, "delay_ticks": 1, "feedback_delay_ticks": 1},
+  "mstd_validity": {
+    "mode": "geometry_support",
+    "min_template_score": 0.2,
+    "min_geometry_excess": 0.1,
+    "local_evidence_threshold": 0.02,
+    "min_active_fraction": 0.25
+  },
+  "monitors": {"spikes": true, "neural_state": true, "every_n_frames": 1},
+  "progress_every": 10
+}

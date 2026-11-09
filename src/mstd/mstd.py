@@ -3,6 +3,8 @@
 from dataclasses import dataclass
 from math import atan, degrees, hypot, isfinite, radians, tan
 
+from .validity import ValidityConfig, decide_validity
+
 
 @dataclass(frozen=True)
 class DynamicsConfig:
@@ -23,7 +25,7 @@ class DynamicsConfig:
 
 
 class MSTd:
-    def __init__(self, spec, centers_px, config=None):
+    def __init__(self, spec, centers_px, config=None, validity_config=None):
         self.spec = spec
         self.centers = tuple(tuple(c) for c in centers_px)
         if len(self.centers) < 2 or len(set(self.centers)) != len(self.centers):
@@ -31,6 +33,7 @@ class MSTd:
         if any(len(c) != 2 or not all(isfinite(v) for v in c) for c in self.centers):
             raise ValueError("template centers must be finite 2D points")
         self.config = config or DynamicsConfig()
+        self.validity_config = validity_config or ValidityConfig()
         self.templates = []
         for cx, cy in self.centers:
             vectors = []
@@ -74,14 +77,20 @@ class MSTd:
         order = sorted(range(len(self.activity)), key=self.activity.__getitem__, reverse=True)
         winner, runner = order[:2]
         margin = self.activity[winner] - self.activity[runner]
-        valid = mt.evidence >= cfg.min_evidence and margin >= cfg.min_margin
+        uniform_score = active_fraction = None
+        if self.validity_config.mode == 'geometry_support':
+            uniform_score = hypot(sum(mt.vx), sum(mt.vy))/norm if norm > 1e-12 else 0.0
+            active_fraction = sum(hypot(x, y) >= self.validity_config.local_evidence_threshold
+                                  for x, y in zip(mt.vx, mt.vy))/n
+        valid, validity = decide_validity(self.validity_config, cfg, mt.evidence, margin,
+                                          scores, winner, uniform_score, active_fraction)
         cx, cy = self.centers[winner]
         # alpha_x/y are projected bearing angles, not Euler yaw/pitch or world pose.
         return {"valid": valid,
                 "alpha_x_deg": degrees(atan((cx-self.spec.cx_px)/self.spec.fx_px)) if valid else None,
                 "alpha_y_deg": degrees(atan((cy-self.spec.cy_px)/self.spec.fy_px)) if valid else None,
                 "winner_index": winner, "margin": margin, "mt_evidence": mt.evidence,
-                "activity": list(self.activity), "template_scores": scores}
+                "activity": list(self.activity), "template_scores": scores, "validity": validity}
 
 
 def horizontal_centers(spec, angles_deg):

@@ -63,6 +63,7 @@ def main(argv=None):
     simulate.add_argument('--device')
     simulate.add_argument('--intrinsics', help='camera JSON; enables calibrated bearing readout')
     simulate.add_argument('--max-frames', type=int)
+    simulate.add_argument('--spike-seed', type=int, help='override Python MT Poisson seed')
     args = parser.parse_args(argv)
     if args.command == 'simulate':
         from .model import load_model_config,model_config
@@ -74,6 +75,10 @@ def main(argv=None):
             config['input'] = {'kind':'v1_recording','path':args.v1_recording}
         for name in ('output','backend','device','intrinsics','max_frames'):
             if getattr(args,name) is not None:config[name]=getattr(args,name)
+        if args.spike_seed is not None:
+            if config['mt_backend'] != 'python_spiking':
+                parser.error('--spike-seed requires python_spiking MT')
+            config['spiking']['seed'] = args.spike_seed
         if args.backend is not None or args.device is not None:
             from .execution import execution_settings
             config.update(execution_settings(args.backend,args.device))

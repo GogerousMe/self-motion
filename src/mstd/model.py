@@ -1,6 +1,7 @@
 """One stateful image -> V1 -> MT -> MSTd model; recording is separate."""
 from contextlib import nullcontext
 from copy import deepcopy
+from dataclasses import asdict
 import json
 from math import isfinite
 from pathlib import Path
@@ -16,6 +17,7 @@ from .v1 import ArrayOps,MotionEnergyV1
 from .neural import SpikeConfig,DelayLine,finite
 from .spiking_mt import PythonSpikingMT
 from .execution import execution_settings
+from .validity import ValidityConfig
 
 DEFAULT_CONFIG = {
     'schema':'mstd-model-v1',
@@ -25,6 +27,7 @@ DEFAULT_CONFIG = {
     'projection_config':'configs/v1_projection.json','projection':'motionProj1',
     'intrinsics':None,'mt_radius':1,'mstd_template_count':9,
     'mt_backend':'rate',
+    'mstd_validity':asdict(ValidityConfig()),
     'spiking':SpikeConfig().description(),
     'carlsim':{'executable':'','mode':'cpu','seed':42,'v1_rate_scale':1.0,'inhibition_enabled':True,'callback_layout':'legacy_mapped'},
     'layers':{'v1':True,'mt':True,'mstd':True},
@@ -42,7 +45,7 @@ def model_config(value=None):
     unknown=set(value)-set(config)
     if unknown:raise ValueError(f'unknown model settings: {sorted(unknown)}')
     for key,item in value.items():
-        if key in ('input','layers','monitors','carlsim','spiking'):
+        if key in ('input','layers','monitors','carlsim','spiking','mstd_validity'):
             if not isinstance(item,dict) or set(item)-set(config[key]):
                 raise ValueError(f'invalid {key} settings')
             config[key].update(item)
@@ -50,6 +53,7 @@ def model_config(value=None):
     if config['mt_backend']=='python_spiking':
         config.update(execution_settings(value.get('backend'),value.get('device')))
     if config['schema']!='mstd-model-v1':raise ValueError('unsupported model configuration')
+    ValidityConfig(**config['mstd_validity'])
     if config['mt_backend'] not in ('rate','carlsim','python_spiking'):raise ValueError('unsupported MT backend')
     if config['mt_backend']=='python_spiking':
         neural=SpikeConfig(**config['spiking'])
@@ -141,7 +145,8 @@ class VisionModel:
                 spec=SimpleNamespace(width=width,height=height,fx_px=None,fy_px=None,
                                      cx_px=(width-1)/2,cy_px=(height-1)/2)
                 self.centers=tuple((float(x),(height-1)/2) for x in np.linspace(0,width-1,count))
-            self.mstd=TensorMSTd(self.ops,spec,self.centers)
+            self.mstd=TensorMSTd(self.ops,spec,self.centers,
+                                 validity_config=ValidityConfig(**self.config['mstd_validity']))
         self.feedback_controller=None
         self.spike_observer=None
         self.feedback_delay=(DelayLine(self.ops,(4,8,height,width),self.config['spiking']['feedback_delay_ticks'])
@@ -249,6 +254,7 @@ class VisionModel:
                              if self.ops.torch and self.ops.device.startswith('cuda') else None,
                              'neural_dtype':'float32'},
                 'mt_backend':self.config['mt_backend'],
+                'mstd_validity':self.config['mstd_validity'],
                 'neural':({**self.config['spiking'],'ticks':self.ticks,
                            'mstd_type':'continuous-rate adapter advanced every neural tick',
                            'feedback':'delayed E/I current modulation or synaptic events onto MT-E; disabled by default',
