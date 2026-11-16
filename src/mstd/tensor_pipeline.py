@@ -8,6 +8,7 @@ import numpy as np
 
 from .mstd import DynamicsConfig
 from .validity import ValidityConfig, decide_validity
+from .readout import ReadoutConfig, heading_readout
 
 
 class DirectionMT:
@@ -63,12 +64,13 @@ class DirectionMT:
 
 class TensorMSTd:
     """Same fixed radial templates and Euler update as mstd.MSTd."""
-    def __init__(self,ops,spec,centers,config=None,validity_config=None):
+    def __init__(self,ops,spec,centers,config=None,validity_config=None,readout_config=None):
         self.ops,self.spec,self.centers = ops,spec,tuple(tuple(c) for c in centers)
         if len(self.centers)<2 or len(set(self.centers))!=len(self.centers):
             raise ValueError('at least two distinct centers required')
         self.config = config or DynamicsConfig()
         self.validity_config = validity_config or ValidityConfig()
+        self.readout_config = readout_config or ReadoutConfig()
         y,x = np.indices((spec.height,spec.width),dtype=np.float64)
         patterns = []
         for cx,cy in self.centers:
@@ -128,10 +130,7 @@ class TensorMSTd:
         valid, validity = decide_validity(self.validity_config, cfg, mt['evidence'], margin,
                                           scores, winner, uniform_score, active_fraction)
         cx,cy = self.centers[winner]
-        calibrated = all(getattr(self.spec,k,None) is not None for k in ('fx_px','fy_px','cx_px','cy_px'))
-        bearing_valid = valid and calibrated
-        return {'valid':valid,'bearing_valid':bearing_valid,'winner_center_px':[cx,cy],
-                'alpha_x_deg':degrees(atan((cx-self.spec.cx_px)/self.spec.fx_px)) if bearing_valid else None,
-                'alpha_y_deg':degrees(atan((cy-self.spec.cy_px)/self.spec.fy_px)) if bearing_valid else None,
+        bearing = heading_readout(activities,self.centers,self.spec,winner,valid,self.readout_config)
+        return {'valid':valid,**bearing,'winner_center_px':[cx,cy],
                 'winner_index':winner,'margin':margin,'mt_evidence':mt['evidence'],
                 'activity':activities,'template_scores':scores,'validity':validity}

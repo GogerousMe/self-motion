@@ -4,6 +4,7 @@ from dataclasses import dataclass
 from math import atan, degrees, hypot, isfinite, radians, tan
 
 from .validity import ValidityConfig, decide_validity
+from .readout import ReadoutConfig, heading_readout
 
 
 @dataclass(frozen=True)
@@ -25,7 +26,7 @@ class DynamicsConfig:
 
 
 class MSTd:
-    def __init__(self, spec, centers_px, config=None, validity_config=None):
+    def __init__(self, spec, centers_px, config=None, validity_config=None, readout_config=None):
         self.spec = spec
         self.centers = tuple(tuple(c) for c in centers_px)
         if len(self.centers) < 2 or len(set(self.centers)) != len(self.centers):
@@ -34,6 +35,7 @@ class MSTd:
             raise ValueError("template centers must be finite 2D points")
         self.config = config or DynamicsConfig()
         self.validity_config = validity_config or ValidityConfig()
+        self.readout_config = readout_config or ReadoutConfig()
         self.templates = []
         for cx, cy in self.centers:
             vectors = []
@@ -86,9 +88,8 @@ class MSTd:
                                           scores, winner, uniform_score, active_fraction)
         cx, cy = self.centers[winner]
         # alpha_x/y are projected bearing angles, not Euler yaw/pitch or world pose.
-        return {"valid": valid,
-                "alpha_x_deg": degrees(atan((cx-self.spec.cx_px)/self.spec.fx_px)) if valid else None,
-                "alpha_y_deg": degrees(atan((cy-self.spec.cy_px)/self.spec.fy_px)) if valid else None,
+        bearing = heading_readout(self.activity,self.centers,self.spec,winner,valid,self.readout_config)
+        return {"valid": valid, **bearing,
                 "winner_index": winner, "margin": margin, "mt_evidence": mt.evidence,
                 "activity": list(self.activity), "template_scores": scores, "validity": validity}
 

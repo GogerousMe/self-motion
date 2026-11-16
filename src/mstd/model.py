@@ -16,8 +16,10 @@ from .tensor_pipeline import DirectionMT,TensorMSTd
 from .v1 import ArrayOps,MotionEnergyV1
 from .neural import SpikeConfig,DelayLine,finite
 from .spiking_mt import PythonSpikingMT
+from .mt_circuit import SpatialConfig
 from .execution import execution_settings
 from .validity import ValidityConfig
+from .readout import ReadoutConfig
 
 DEFAULT_CONFIG = {
     'schema':'mstd-model-v1',
@@ -28,7 +30,9 @@ DEFAULT_CONFIG = {
     'intrinsics':None,'mt_radius':1,'mstd_template_count':9,
     'mt_backend':'rate',
     'mstd_validity':asdict(ValidityConfig()),
+    'mstd_readout':asdict(ReadoutConfig()),
     'spiking':SpikeConfig().description(),
+    'mt_spatial':SpatialConfig().description(),
     'carlsim':{'executable':'','mode':'cpu','seed':42,'v1_rate_scale':1.0,'inhibition_enabled':True,'callback_layout':'legacy_mapped'},
     'layers':{'v1':True,'mt':True,'mstd':True},
     'monitors':{'v1':True,'mt_projection':True,'mt_pooling':True,
@@ -45,7 +49,7 @@ def model_config(value=None):
     unknown=set(value)-set(config)
     if unknown:raise ValueError(f'unknown model settings: {sorted(unknown)}')
     for key,item in value.items():
-        if key in ('input','layers','monitors','carlsim','spiking','mstd_validity'):
+        if key in ('input','layers','monitors','carlsim','spiking','mt_spatial','mstd_validity','mstd_readout'):
             if not isinstance(item,dict) or set(item)-set(config[key]):
                 raise ValueError(f'invalid {key} settings')
             config[key].update(item)
@@ -54,6 +58,10 @@ def model_config(value=None):
         config.update(execution_settings(value.get('backend'),value.get('device')))
     if config['schema']!='mstd-model-v1':raise ValueError('unsupported model configuration')
     ValidityConfig(**config['mstd_validity'])
+    ReadoutConfig(**config['mstd_readout'])
+    spatial = SpatialConfig(**config['mt_spatial'])
+    if spatial.enabled and config['mt_backend'] != 'python_spiking':
+        raise ValueError('mt_spatial requires python_spiking backend')
     if config['mt_backend'] not in ('rate','carlsim','python_spiking'):raise ValueError('unsupported MT backend')
     if config['mt_backend']=='python_spiking':
         neural=SpikeConfig(**config['spiking'])
@@ -129,7 +137,8 @@ class VisionModel:
         self.centers=()
         if layers['mt']:
             self.projection=load_projection(self.config['projection_config'],self.config['projection'])
-            self.mt=(PythonSpikingMT(self.ops,self.projection,width,height,SpikeConfig(**self.config['spiking']))
+            self.mt=(PythonSpikingMT(self.ops,self.projection,width,height,SpikeConfig(**self.config['spiking']),
+                                     spatial_config=SpatialConfig(**self.config['mt_spatial']))
                      if self.config['mt_backend']=='python_spiking' else
                      DirectionMT(self.ops,self.projection,width,height,self.config['mt_radius']))
         if isinstance(self.intrinsics,str):
@@ -146,7 +155,8 @@ class VisionModel:
                                      cx_px=(width-1)/2,cy_px=(height-1)/2)
                 self.centers=tuple((float(x),(height-1)/2) for x in np.linspace(0,width-1,count))
             self.mstd=TensorMSTd(self.ops,spec,self.centers,
-                                 validity_config=ValidityConfig(**self.config['mstd_validity']))
+                                 validity_config=ValidityConfig(**self.config['mstd_validity']),
+                                 readout_config=ReadoutConfig(**self.config['mstd_readout']))
         self.feedback_controller=None
         self.spike_observer=None
         self.feedback_delay=(DelayLine(self.ops,(4,8,height,width),self.config['spiking']['feedback_delay_ticks'])
@@ -254,7 +264,9 @@ class VisionModel:
                              if self.ops.torch and self.ops.device.startswith('cuda') else None,
                              'neural_dtype':'float32'},
                 'mt_backend':self.config['mt_backend'],
+                'mt_spatial':self.config['mt_spatial'],
                 'mstd_validity':self.config['mstd_validity'],
+                'mstd_readout':self.config['mstd_readout'],
                 'neural':({**self.config['spiking'],'ticks':self.ticks,
                            'mstd_type':'continuous-rate adapter advanced every neural tick',
                            'feedback':'delayed E/I current modulation or synaptic events onto MT-E; disabled by default',

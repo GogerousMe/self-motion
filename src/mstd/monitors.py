@@ -75,6 +75,13 @@ class ModelMonitors:
                     name='mt_'+key
                     self.arrays[name]=(ArrayMonitor(root/name,(8,model.height,model.width),'DYX',units,
                                                   {'timestamp_reference':'frame_end'}),key)
+                if model.config['mt_spatial']['enabled']:
+                    key = 'spatial_exc_conductance'
+                    self.arrays['mt_' + key] = (ArrayMonitor(
+                        root / ('mt_' + key), (8, model.height, model.width), 'DYX',
+                        'effective conductance', {'timestamp_reference': 'frame_end',
+                        'semantic': 'delayed same-direction spatial excitation onto MT-E',
+                        'mt_spatial': model.config['mt_spatial']}), key)
             if self.config['spikes']:
                 event_root=root/'spikes';event_root.mkdir(parents=True,exist_ok=False)
                 for group in ('v1','exc','inh'):

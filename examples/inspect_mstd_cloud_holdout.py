@@ -45,6 +45,9 @@ def array_monitor(run, name):
 
 
 def profiles(v, patterns):
+    # Independent score audit: avoid long float32 reductions introducing a
+    # larger discrepancy than the actual CUDA/NumPy model difference.
+    v = np.asarray(v, dtype=np.float64)
     norm = float(np.hypot(v[0], v[1]).sum())
     return np.maximum(np.einsum('kcyx,cyx->k', patterns, v, optimize=True)/max(norm,1e-12), 0)
 
@@ -64,6 +67,7 @@ def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--parent-run', action='append', required=True)
     p.add_argument('--output', required=True)
+    p.add_argument('--suite',default='input/stimuli/selfmotion/mstd_gate_holdout_s0097__80x80__f000080__dt50ms__7cases__v01')
     a = p.parse_args()
     out = Path(a.output).resolve()
     if not out.is_relative_to(ROOT/'outputs/comparisons'):
@@ -73,9 +77,11 @@ def main():
     op = ArrayOps()
     projection = load_projection(ROOT/'configs/v1_projection.json')
     spec = V1Spec(80,80,projection.directions_rad,40.,40.,39.5,39.5)
-    patterns = TensorMSTd(op,spec,horizontal_centers(spec,angles)).templates
+    patterns = TensorMSTd(op,spec,horizontal_centers(spec,angles)).templates.astype(np.float64)
     linear = DirectionMT(op,projection,80,80,radius=0)
-    bundle = ROOT/'input/stimuli/selfmotion/mstd_gate_holdout_s0097__80x80__f000080__dt50ms__7cases__v01'
+    bundle = (ROOT/a.suite).resolve()
+    if not bundle.is_relative_to(ROOT/'input/stimuli/selfmotion'):
+        p.error('suite must be under input/stimuli/selfmotion')
     manifest = json.loads((bundle/'manifest.json').read_text(encoding='utf-8'))
     all_rows = []; summaries = []; fingerprints = {}
     for parent in a.parent_run:
@@ -152,7 +158,7 @@ def main():
          limitations=['Linear V1 readout is not a neural E/I counterfactual.',
                       'MT frame-rate readout and filtered trace use different time windows.',
                       'Parabolic peaks are diagnostics, never changed outputs or acceptance tests.',
-                      'One scene seed and one neural seed; cannot establish all causal origins.']))
+                      'Fixed scene seed; repeated neural seeds alone cannot establish general scene robustness.']))
     with (out/'frames.csv').open('x',encoding='utf-8',newline='') as f:
         writer = csv.DictWriter(f,fieldnames=list(all_rows[0])); writer.writeheader(); writer.writerows(all_rows)
     artifact = dict(schema='mstd-artifact-v1',id=out.name,kind='comparison',status='completed',

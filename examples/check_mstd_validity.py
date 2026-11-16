@@ -20,6 +20,7 @@ from mstd.mstd import DynamicsConfig, horizontal_centers
 from mstd.tensor_pipeline import TensorMSTd
 from mstd.v1 import ArrayOps
 from mstd.validity import ValidityConfig, decide_validity
+from mstd.readout import ReadoutConfig, heading_readout
 
 
 DEFAULT_PARENTS = [
@@ -31,7 +32,7 @@ ANGLES = np.arange(-20, 21, 5)
 Y, X = np.indices((80, 80))
 SOURCE_FILES = ('examples/check_mstd_validity.py', 'src/mstd/validity.py',
                 'src/mstd/tensor_pipeline.py', 'src/mstd/mstd.py', 'src/mstd/model.py',
-                'configs/model_python_spiking_geometry_v01.json')
+                'src/mstd/readout.py','configs/model_python_spiking_geometry_v01.json')
 
 
 def digest(path):
@@ -81,10 +82,15 @@ def fixture_frames(definition):
 
 def make_row(name, index, state, source_valid=None):
     detail = state['validity']
+    description=state.get('readout',{})
+    readout=ReadoutConfig(mode=description.get('mode','winner'),curvature_epsilon=description.get('curvature_epsilon',1e-12))
+    selected=heading_readout(state['activity'],horizontal_centers(SPEC,ANGLES),SPEC,
+                            state['winner_index'],True,readout)['alpha_x_deg']
     return dict(case=name, frame=index, end_s=(index+1)*.05,
                 source_valid=source_valid, legacy_valid=detail['legacy_valid'],
                 geometry_valid=bool(state['valid']),
                 winner_heading_deg=float(ANGLES[state['winner_index']]),
+                selected_heading_deg=float(selected),readout_mode=readout.mode,
                 evidence=float(state['mt_evidence']), margin=float(state['margin']),
                 **{k:detail[k] for k in ('winner_template_score','max_template_score',
                                         'uniform_score','geometry_excess','active_fraction')},
@@ -101,6 +107,12 @@ def summarize(definition, rows):
                                         if valid and definition['expected_valid'] else None)
     result['unconditional_winner_mae_deg'] = (float(np.mean([abs(r['winner_heading_deg']-definition['heading']) for r in stable]))
                                               if definition['expected_valid'] else None)
+    result['readout_mode']=stable[0]['readout_mode']
+    result['unconditional_selected_mae_deg']=(float(np.mean([abs(r['selected_heading_deg']-definition['heading']) for r in stable]))
+                                              if definition['expected_valid'] else None)
+    valid=[r for r in stable if r['geometry_valid']]
+    result['geometry_valid_selected_mae_deg']=(float(np.mean([abs(r['selected_heading_deg']-definition['heading']) for r in valid]))
+                                               if valid and definition['expected_valid'] else None)
     result['mean_score'] = float(np.mean([r['winner_template_score'] for r in stable]))
     result['mean_excess'] = float(np.mean([r['geometry_excess'] for r in stable]))
     result['mean_active_fraction'] = float(np.mean([r['active_fraction'] for r in stable]))
@@ -109,7 +121,7 @@ def summarize(definition, rows):
         result['diagnostic_passed'] = None
     elif definition['expected_valid']:
         result['diagnostic_passed'] = (result['geometry_valid_fraction'] >= .95
-                                       and result['unconditional_winner_mae_deg'] <= 2.5+1e-6)
+                                       and result['unconditional_selected_mae_deg'] <= 2.5+1e-6)
     else:
         result['diagnostic_passed'] = result['geometry_valid_fraction'] <= .05
     return result
@@ -262,16 +274,17 @@ def main():
                    limitations=['Saved real scenes were inspected in prior diagnostics; they are NOT blind holdouts.',
                                 'Saved-state checks re-gate original scores/winners exactly; no neural trajectory replay.',
                                 'Synthetic noise seeds do not substitute for independent image/neural runs.',
-                                'No V1/MT/competition changes; angles remain a 5-degree grid.'])
+                                'No V1/MT/competition changes; template grid remains5deg; selected angular readout is reported separately.'])
     write_json(out/'metrics.json', metrics)
     report_lines = ['# MSTd有效性对照', '',
         '同一竞争峰值分别应用旧规则和冻结的新规则。排除前20帧，统计后60帧。分数和活动无量纲，不是Hz或概率。', '',
-        '| 条件 | 数据分组 | 旧有效率 | 新有效率 | 未门控峰值MAE(度) | 诊断目标通过 |',
-        '|---|---|---:|---:|---:|---|']
+        '| 条件 | 数据分组 | 旧有效率 | 新有效率 | 赢家MAE(度) | 所选读出 | 读出MAE(度) | 诊断目标通过 |',
+        '|---|---|---:|---:|---:|---|---:|---|']
     for r in summary:
         mae = '--' if r['unconditional_winner_mae_deg'] is None else f"{r['unconditional_winner_mae_deg']:.3f}"
-        report_lines.append(f"| {r['name']} | {r['phase']} | {r['legacy_valid_fraction']:.1%} | {r['geometry_valid_fraction']:.1%} | {mae} | {r['diagnostic_passed']} |")
-    report_lines.extend(['', '目标：本轮正例有效率≥95%且未门控峰值MAE≤2.5°；负例误报≤5%。这些是本协议的诊断目标，不是完整自运动系统验收。', '',
+        selected='--' if r['unconditional_selected_mae_deg'] is None else f"{r['unconditional_selected_mae_deg']:.3f}"
+        report_lines.append(f"| {r['name']} | {r['phase']} | {r['legacy_valid_fraction']:.1%} | {r['geometry_valid_fraction']:.1%} | {mae} | {r['readout_mode']} | {selected} | {r['diagnostic_passed']} |")
+    report_lines.extend(['', '目标：本轮正例有效率≥95%且未门控所选读出MAE≤2.5°；负例误报≤5%。赢家误差单独保留，不将拒绝帧从无条件误差中删除。这些是本协议的诊断目标，不是完整自运动系统验收。', '',
         '已有真实静止/前进曾用于问题定位，属于known；只有与当前冻结文件哈希匹配的后生成图像套件记为independent。',
         '保存响应检查直接使用原始分数/竞争赢家，没有重放神经轨迹；几何模式的原生判断还与CPU标量重算逐帧核对。',
         '旋转/后退为当前扩张模板的域外拒绝控制，拒绝不代表已能估计这些运动。', '',

@@ -4,10 +4,11 @@ import numpy as np
 
 from .neural import (SpikeConfig,DelayLine,PoissonEncoder,ExpConductance,
                      IzhikevichPopulation,nonnegative,finite)
+from .mt_circuit import SpatialConfig, SpatialExcitation
 
 
 class PythonSpikingMT:
-    def __init__(self,op,projection,width,height,config=None,population_order=('exc','inh')):
+    def __init__(self,op,projection,width,height,config=None,population_order=('exc','inh'),spatial_config=None):
         self.op,self.projection=op,projection
         self.config=config or SpikeConfig()
         if len(population_order)!=2 or set(population_order)!={'exc','inh'}:raise ValueError('each MT population must update exactly once')
@@ -28,10 +29,15 @@ class PythonSpikingMT:
         self.feedback_gi=ExpConductance(op,self.shape,self.config.tau_inh_ms)
         self.input_delay=DelayLine(op,(2,*self.shape),self.config.delay_ticks)
         self.inhib_delay=DelayLine(op,self.shape,self.config.delay_ticks)
+        self.spatial_config = spatial_config or SpatialConfig()
+        self.spatial = (SpatialExcitation(op, projection.directions_rad, width, height, self.spatial_config)
+                        if self.spatial_config.enabled and self.spatial_config.gain > 0 else None)
         self.reset()
 
     def reset(self):
         for part in (self.encoder,self.exc,self.inh,self.ge,self.gi,self.drive_i,self.feedback_ge,self.feedback_gi,self.input_delay,self.inhib_delay):part.reset()
+        if self.spatial:
+            self.spatial.reset()
         self.trace=self.op.zeros(self.shape)
         self.zero=self.op.zeros(self.shape)
         self.rates=None
@@ -62,8 +68,11 @@ class PythonSpikingMT:
             raise ValueError('invalid MT feedback: currents may be signed, synaptic events must be nonnegative')
         feedback_ge=self.feedback_ge.step(feedback[2],cfg.dt_ms)
         feedback_gi=self.feedback_gi.step(feedback[3],cfg.dt_ms)
+        exc_conductance = ge + feedback_ge
+        if self.spatial:
+            exc_conductance = exc_conductance + self.spatial.arrive(cfg.dt_ms)
         kwargs=dict(dt_ms=cfg.dt_ms,substeps=cfg.substeps,reversal_exc=cfg.reversal_exc,reversal_inh=cfg.reversal_inh)
-        inputs={'exc':(self.exc,ge+feedback_ge,gi+feedback_gi,feedback[0]),
+        inputs={'exc':(self.exc,exc_conductance,gi+feedback_gi,feedback[0]),
                 'inh':(self.inh,drive_i,self.zero,feedback[1])}
         emitted={}
         for name in self.population_order:
@@ -75,6 +84,8 @@ class PythonSpikingMT:
         einsum=op.torch.einsum if op.torch else np.einsum
         self.input_delay.write(op.stack([einsum('fyx,fd->dyx',scaled,w) for w in (self.positive,self.negative)]))
         self.inhib_delay.write(inh)
+        if self.spatial:
+            self.spatial.emit(exc)
         decay=exp(-cfg.dt_ms/cfg.trace_tau_ms)
         self.trace=self.trace*decay+exc*((1-decay)*1000/cfg.dt_ms)
         self.ticks+=1
@@ -92,7 +103,12 @@ class PythonSpikingMT:
 
     def diagnostics(self):
         # Copy so external monitors/controllers cannot mutate persistent state.
-        return {name:self.op.copy(value) for name,value in dict(
+        values = dict(
             exc_voltage=self.exc.v,inh_voltage=self.inh.v,exc_recovery=self.exc.u,inh_recovery=self.inh.u,
             exc_conductance=self.ge.g+self.feedback_ge.g,
-            inh_conductance=self.gi.g+self.feedback_gi.g).items()}
+            inh_conductance=self.gi.g+self.feedback_gi.g)
+        if self.spatial_config.enabled:
+            spatial = self.spatial.synapse.g if self.spatial else self.zero
+            values['spatial_exc_conductance'] = spatial
+            values['exc_conductance'] = values['exc_conductance'] + spatial
+        return {name:self.op.copy(value) for name,value in values.items()}
