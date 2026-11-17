@@ -69,6 +69,11 @@ class ModelMonitors:
             if self.config['mt_projection']:
                 self.arrays['mt_inh_rates']=(ArrayMonitor(root/'mt_inh_rates',(8,model.height,model.width),'DYX','Hz',
                      {'timestamp_reference':'frame_end','directions_rad':directions}),'inh_rates')
+                if model.mt.competition:
+                    self.arrays['mt_competition_rates'] = (ArrayMonitor(
+                        root/'mt_competition_rates', (8,model.height,model.width), 'DYX', 'Hz',
+                        {'timestamp_reference':'frame_end', 'directions_rad':directions,
+                         'semantic':'observed competition J spike count / frame duration'}), 'competition_rates')
             if self.config['neural_state']:
                 for key,units in (('exc_voltage','mV'),('inh_voltage','mV'),('exc_recovery','model units'),
                                   ('inh_recovery','model units'),('exc_conductance','effective conductance'),('inh_conductance','effective conductance')):
@@ -82,9 +87,22 @@ class ModelMonitors:
                         'effective conductance', {'timestamp_reference': 'frame_end',
                         'semantic': 'delayed same-direction spatial excitation onto MT-E',
                         'mt_spatial': model.config['mt_spatial']}), key)
+                if model.mt.competition:
+                    for key, units, semantic in (
+                            ('competition_voltage', 'mV', 'competition J membrane voltage'),
+                            ('competition_recovery', 'model units', 'competition J recovery variable'),
+                            ('competition_exc_conductance', 'effective conductance', 'E to J excitation'),
+                            ('competition_inh_conductance', 'effective conductance', 'J to MT-E cross-direction inhibition')):
+                        self.arrays['mt_'+key] = (ArrayMonitor(
+                            root/('mt_'+key), (8,model.height,model.width), 'DYX', units,
+                            {'timestamp_reference':'frame_end', 'semantic':semantic,
+                             'mt_competition':model.config['mt_competition']}), key)
             if self.config['spikes']:
                 event_root=root/'spikes';event_root.mkdir(parents=True,exist_ok=False)
-                for group in ('v1','exc','inh'):
+                groups = ['v1', 'exc', 'inh']
+                if model.mt.competition:
+                    groups.append('competition')
+                for group in groups:
                     self.spike_streams[group]=(event_root/f'{group}.events').open('xb')
                     self.spike_records[group]=0
         if self.config['mstd'] and model.mstd:
@@ -158,7 +176,8 @@ class ModelMonitors:
                     timestamp_reference='(tick+1)*dt_ms, tick end; sequence starts at 0',
                     records=self.spike_records,files={g:g+'.events' for g in self.spike_streams},
                     shapes={'v1':[3,28,self.model.height,self.model.width],
-                            'exc':[8,self.model.height,self.model.width],'inh':[8,self.model.height,self.model.width]},
+                            'exc':[8,self.model.height,self.model.width],'inh':[8,self.model.height,self.model.width],
+                            **({'competition':[8,self.model.height,self.model.width]} if self.model.mt.competition else {})},
                     note='all ticks recorded regardless of frame monitor stride; multi-events retain count'))
             if self.summary_stream:self.summary_stream.close()
             if self.estimates_stream:self.estimates_stream.close()

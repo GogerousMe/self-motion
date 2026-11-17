@@ -16,10 +16,10 @@ from mstd.calibration import file_sha256
 from mstd.v1_recording import dump_json, iter_stimulus
 import visualize_mt_gratings as drawing
 from visualize_python_spiking import close_recording, load_recording, paired_stimulus
-from run_mt_spatial_controls import register_run
+from run_mt_spatial_controls import register_run, VARIANT_SWITCHES
 
 
-def render(run, case_name, maximum):
+def render(run, case_name, maximum, variants=('baseline', 'spatial_only')):
     if not np.isfinite(maximum) or maximum <= 0:
         raise ValueError('positive finite rate maximum required')
     folder = run / case_name
@@ -32,30 +32,32 @@ def render(run, case_name, maximum):
         raise RuntimeError('install ffmpeg to write MP4')
     recordings = []
     try:
-        for variant in ('baseline', 'spatial_only'):
+        for variant in variants:
             data = load_recording(folder / variant)
             recordings.append(data)
             paired_stimulus(data, stimulus)
             if data['indices'] != list(range(data['report']['frames'])):
                 raise ValueError('every-frame recording required')
-        if recordings[0]['indices'] != recordings[1]['indices']:
+        if any(data['indices'] != recordings[0]['indices'] for data in recordings):
             raise ValueError('paired frame indices disagree')
         dt = recordings[0]['report']['model']['frame_interval_s']
-        if dt != recordings[1]['report']['model']['frame_interval_s']:
+        if any(data['report']['model']['frame_interval_s'] != dt for data in recordings):
             raise ValueError('paired frame intervals disagree')
         identifier = run.name + '__' + case_name + '__rates__v01'
-        output = ROOT / 'outputs/comparisons/mt_spatial' / identifier
+        category = 'mt_competition' if len(variants) == 4 else 'mt_spatial'
+        output = ROOT / 'outputs/comparisons' / category / identifier
         output.mkdir(parents=True, exist_ok=False)
         artifact = dict(schema='mstd-artifact-v1', id=identifier, kind='comparison', status='running',
             parent_run_ids=[json.loads((folder / variant / 'artifact.json').read_text())['id']
-                            for variant in ('baseline', 'spatial_only')], stimulus_ids=[],
+                            for variant in variants], stimulus_ids=[],
             input_paths=[stimulus.relative_to(ROOT).as_posix()], input_sha256=file_sha256(stimulus),
             source_hashes={'tools/render_mt_spatial_controls.py': file_sha256(Path(__file__)),
                            'examples/visualize_mt_gratings.py': file_sha256(ROOT / 'examples/visualize_mt_gratings.py')},
             notes='Observed excitatory spikes/frame duration, Hz. Shared color scale; nearest-neighbor display.')
         frames = len(recordings[0]['indices'])
+        drawing.H = 240 + len(variants) * 200
         command = [encoder, '-v', 'error', '-n', '-f', 'rawvideo', '-pix_fmt', 'rgb24',
-                   '-s', '1440x640', '-r', str(1 / dt), '-i', 'pipe:0', '-an', '-c:v', 'libx264',
+                   '-s', f'1440x{drawing.H}', '-r', str(1 / dt), '-i', 'pipe:0', '-an', '-c:v', 'libx264',
                    '-crf', '18', '-pix_fmt', 'yuv420p', '-movflags', '+faststart', str(output / 'mt_spatial_comparison.mp4')]
         process = None
         try:
@@ -66,7 +68,9 @@ def render(run, case_name, maximum):
                     drawing.text(canvas, 24, 10, f'FRAME {index} / {frames - 1}   INPUT {index * dt:.3f} S', 2)
                     gray = pixels if pixels.ndim == 2 else pixels[:, :, 0]
                     drawing.image(canvas, 24, 38, 192, gray.reshape(-1), gray.shape[1], gray.shape[0])
-                    drawing.text(canvas, 260, 45, 'BASELINE TOP - SPATIAL ONLY BOTTOM', 3)
+                    title = ('ROWS BASELINE / SPATIAL / COMPETITION / BOTH' if len(variants) == 4
+                             else 'BASELINE TOP - SPATIAL ONLY BOTTOM')
+                    drawing.text(canvas, 260, 45, title, 2)
                     drawing.text(canvas, 260, 85, 'OBSERVED MT EXCITATORY SPIKE RATE - HZ', 2)
                     if case.get('direction_deg') is not None:
                         angle = case['direction_deg']
@@ -82,10 +86,11 @@ def render(run, case_name, maximum):
                         for direction, rates in enumerate(values):
                             x = 24 + direction * 174
                             y = 260 + row * 200
-                            drawing.text(canvas, x, y - 18, f'{direction * 45:03d} {drawing.NAMES[direction]}', 1)
+                            drawing.text(canvas, x, y - 18, f'{direction * 45:03d} {drawing.NAMES[direction]}',
+                                         2 if len(variants) == 4 else 1)
                             drawing.image(canvas, x, y, 160, rates.reshape(-1), rates.shape[1], rates.shape[0], maximum, 'jet')
                     if index in (0, frames - 1):
-                        drawing.png(output / f'frame_{index:04d}.png', canvas)
+                        drawing.png(output / f'frame_{index:04d}.png', canvas, width=drawing.W, height=drawing.H)
                     process.stdin.write(canvas)
                 process.stdin.close()
                 if process.wait() != 0:
@@ -93,7 +98,7 @@ def render(run, case_name, maximum):
             dump_json(output / 'visualization.json', dict(complete=True, frames=frames, frame_interval_s=dt,
                 unit='Hz', rate_max=maximum, direction_order_deg=list(range(0, 360, 45)),
                 coordinates='x-right_y-down; clockwise from right', response_timestamp='frame_end',
-                input_timestamp='frame_start', row_order=['baseline', 'spatial_only'],
+                input_timestamp='frame_start', row_order=list(variants),
                 monitor='mt_exc_rates', stimulus_sha256=artifact['input_sha256']))
             artifact['status'] = 'completed'
         except BaseException:
@@ -115,13 +120,15 @@ def main():
     parser.add_argument('--run', type=Path, required=True)
     parser.add_argument('--case', default='texture_d000_s1')
     parser.add_argument('--rate-max', type=float, default=300)
+    parser.add_argument('--four-way', action='store_true')
     args = parser.parse_args()
     run = args.run.resolve()
     if not run.is_relative_to(ROOT.resolve()):
         raise ValueError('run must be inside the project')
     if args.case not in {path.name for path in run.iterdir() if path.is_dir()}:
         raise ValueError('case must name one case folder inside the run')
-    render(run, args.case, args.rate_max)
+    variants = tuple(VARIANT_SWITCHES) if args.four_way else ('baseline', 'spatial_only')
+    render(run, args.case, args.rate_max, variants)
 
 
 if __name__ == '__main__':

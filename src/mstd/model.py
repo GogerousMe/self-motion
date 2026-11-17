@@ -10,13 +10,13 @@ from types import SimpleNamespace
 import numpy as np
 
 from .data import V1Spec
-from .mstd import horizontal_centers
+from .mstd import horizontal_centers, DynamicsConfig
 from .projection import load_projection
 from .tensor_pipeline import DirectionMT,TensorMSTd
 from .v1 import ArrayOps,MotionEnergyV1
 from .neural import SpikeConfig,DelayLine,finite
 from .spiking_mt import PythonSpikingMT
-from .mt_circuit import SpatialConfig
+from .mt_circuit import SpatialConfig, CompetitionConfig, COMPETITION_NEURON_PARAMETERS
 from .execution import execution_settings
 from .validity import ValidityConfig
 from .readout import ReadoutConfig
@@ -31,8 +31,10 @@ DEFAULT_CONFIG = {
     'mt_backend':'rate',
     'mstd_validity':asdict(ValidityConfig()),
     'mstd_readout':asdict(ReadoutConfig()),
+    'mstd_dynamics':asdict(DynamicsConfig()),
     'spiking':SpikeConfig().description(),
     'mt_spatial':SpatialConfig().description(),
+    'mt_competition':CompetitionConfig().description(),
     'carlsim':{'executable':'','mode':'cpu','seed':42,'v1_rate_scale':1.0,'inhibition_enabled':True,'callback_layout':'legacy_mapped'},
     'layers':{'v1':True,'mt':True,'mstd':True},
     'monitors':{'v1':True,'mt_projection':True,'mt_pooling':True,
@@ -49,7 +51,7 @@ def model_config(value=None):
     unknown=set(value)-set(config)
     if unknown:raise ValueError(f'unknown model settings: {sorted(unknown)}')
     for key,item in value.items():
-        if key in ('input','layers','monitors','carlsim','spiking','mt_spatial','mstd_validity','mstd_readout'):
+        if key in ('input','layers','monitors','carlsim','spiking','mt_spatial','mt_competition','mstd_validity','mstd_readout','mstd_dynamics'):
             if not isinstance(item,dict) or set(item)-set(config[key]):
                 raise ValueError(f'invalid {key} settings')
             config[key].update(item)
@@ -59,9 +61,13 @@ def model_config(value=None):
     if config['schema']!='mstd-model-v1':raise ValueError('unsupported model configuration')
     ValidityConfig(**config['mstd_validity'])
     ReadoutConfig(**config['mstd_readout'])
+    DynamicsConfig(**config['mstd_dynamics'])
     spatial = SpatialConfig(**config['mt_spatial'])
     if spatial.enabled and config['mt_backend'] != 'python_spiking':
         raise ValueError('mt_spatial requires python_spiking backend')
+    competition = CompetitionConfig(**config['mt_competition'])
+    if competition.enabled and config['mt_backend'] != 'python_spiking':
+        raise ValueError('mt_competition requires python_spiking backend')
     if config['mt_backend'] not in ('rate','carlsim','python_spiking'):raise ValueError('unsupported MT backend')
     if config['mt_backend']=='python_spiking':
         neural=SpikeConfig(**config['spiking'])
@@ -138,7 +144,8 @@ class VisionModel:
         if layers['mt']:
             self.projection=load_projection(self.config['projection_config'],self.config['projection'])
             self.mt=(PythonSpikingMT(self.ops,self.projection,width,height,SpikeConfig(**self.config['spiking']),
-                                     spatial_config=SpatialConfig(**self.config['mt_spatial']))
+                                     spatial_config=SpatialConfig(**self.config['mt_spatial']),
+                                     competition_config=CompetitionConfig(**self.config['mt_competition']))
                      if self.config['mt_backend']=='python_spiking' else
                      DirectionMT(self.ops,self.projection,width,height,self.config['mt_radius']))
         if isinstance(self.intrinsics,str):
@@ -155,6 +162,7 @@ class VisionModel:
                                      cx_px=(width-1)/2,cy_px=(height-1)/2)
                 self.centers=tuple((float(x),(height-1)/2) for x in np.linspace(0,width-1,count))
             self.mstd=TensorMSTd(self.ops,spec,self.centers,
+                                 config=DynamicsConfig(**self.config['mstd_dynamics']),
                                  validity_config=ValidityConfig(**self.config['mstd_validity']),
                                  readout_config=ReadoutConfig(**self.config['mstd_readout']))
         self.feedback_controller=None
@@ -197,6 +205,8 @@ class VisionModel:
         dt_ms=self.config['spiking']['dt_ms'];dt=dt_ms/1000
         count=round(self.config['frame_ms']/dt_ms)
         totals={k:op.zeros(shape) for k,shape in (('v1',self.mt.input_shape),('exc',self.mt.shape),('inh',self.mt.shape))}
+        if self.mt.competition:
+            totals['competition'] = op.zeros(self.mt.shape)
         mst=None
         for i in range(count):
             arriving=self.feedback_delay.read()
@@ -207,6 +217,8 @@ class VisionModel:
             # Neural receivers can consume events directly; the temporary rate
             # MSTd adapter ignores these extra fields. Receivers own their delays.
             mt.update(spikes=spikes['exc'],inh_spikes=spikes['inh'])
+            if self.mt.competition:
+                mt['competition_spikes'] = spikes['competition']
             mst=(self.mstd.step(mt,dt,return_state=export_state) if isinstance(self.mstd,TensorMSTd)
                  else self.mstd.step(mt,dt) if self.mstd else None)
             end=timestamp_s+(i+1)*dt
@@ -232,6 +244,9 @@ class VisionModel:
             self.ticks+=1
         result={**mt,'direction_rates':totals['exc']/self.interval,'inh_rates':totals['inh']/self.interval,
                 'exc_counts':totals['exc'],'inh_counts':totals['inh'],'v1_counts':totals['v1']}
+        if self.mt.competition:
+            result.update(competition_rates=totals['competition']/self.interval,
+                          competition_counts=totals['competition'])
         if self.config['monitors']['neural_state']:result.update(self.mt.diagnostics())
         return result,mst
 
@@ -265,8 +280,12 @@ class VisionModel:
                              'neural_dtype':'float32'},
                 'mt_backend':self.config['mt_backend'],
                 'mt_spatial':self.config['mt_spatial'],
+                'mt_competition':self.config['mt_competition'],
+                'mt_competition_neuron':(dict(COMPETITION_NEURON_PARAMETERS) if self.mt and
+                                       getattr(self.mt,'competition',None) else None),
                 'mstd_validity':self.config['mstd_validity'],
                 'mstd_readout':self.config['mstd_readout'],
+                'mstd_dynamics':self.config['mstd_dynamics'],
                 'neural':({**self.config['spiking'],'ticks':self.ticks,
                            'mstd_type':'continuous-rate adapter advanced every neural tick',
                            'feedback':'delayed E/I current modulation or synaptic events onto MT-E; disabled by default',

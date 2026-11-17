@@ -15,7 +15,7 @@ sys.path.insert(0, str(ROOT / 'src'))
 from mstd.calibration import file_sha256, stimulus_frames, write_stimulus
 from mstd.execution import execution_settings
 from mstd.model import model_config
-from mstd.mt_circuit import SpatialConfig
+from mstd.mt_circuit import SpatialConfig, CompetitionConfig
 from mstd.neural import SpikeConfig
 from mstd.project_paths import resolve_stimulus
 from mstd.simulation import simulate
@@ -24,6 +24,12 @@ from mstd.v1_recording import dump_json, raw_info
 
 KITTI_RUN = '20261109_234047__kitti04_f000153_f000232_160x48_f000080__py_spike_cuda__s0043__r01'
 STATIC_RUN = '20261116_145631__kitti04_static193_160x48_f000080__py_spike_cuda__s0043__r01'
+VARIANT_SWITCHES = {
+    'baseline': (False, False),
+    'spatial_only': (True, False),
+    'competition_only': (False, True),
+    'spatial_competition': (True, True),
+}
 
 
 def append_index(path, row, fields):
@@ -85,6 +91,14 @@ def summarize(folder, case, warmup):
                       active_local_direction_mae_deg=float(np.mean(local_errors)) if local_errors else None,
                       active_local_direction_p95_deg=float(np.percentile(local_errors, 95)) if local_errors else None,
                       wall_seconds=report['wall_seconds'])
+        competition_file = folder / 'monitors/mt_competition_rates/values.f32'
+        if competition_file.is_file():
+            j_rates = np.memmap(competition_file, mode='r', dtype='<f4', shape=shape)
+            try:
+                result['competition_mean_hz'] = float(j_rates[warmup:].mean())
+                result['competition_max_frame_hz'] = float(j_rates[warmup:].max())
+            finally:
+                j_rates._mmap.close()
         truth = case.get('truth')
         if truth is not None:
             errors = [abs((s['alpha_x_deg'] - t['expected_heading_deg'] + 180) % 360 - 180)
@@ -131,9 +145,18 @@ def build_cases(args):
     return cases
 
 
-def run(args):
+def run(args, variants=('baseline', 'spatial_only')):
+    if (not variants or variants[0] != 'baseline' or len(set(variants)) != len(variants)
+            or any(variant not in VARIANT_SWITCHES for variant in variants)):
+        raise ValueError('unique supported variants must start with baseline for V1 replay')
+    competition_suite = any(VARIANT_SWITCHES[variant][1] for variant in variants)
     execution = execution_settings(args.backend, args.device)
     spatial = SpatialConfig(enabled=True, gain=args.gain, radius=args.radius)
+    competition = CompetitionConfig(
+        enabled=True,
+        input_weight=getattr(args, 'competition_input_weight', 0.25),
+        inhibition_weight=getattr(args, 'competition_weight', 0.2),
+        mode=getattr(args, 'competition_mode', 'angular'))
     neural = replace(SpikeConfig(), seed=args.seed, substeps=args.substeps)
     cases = build_cases(args)
     plan = dict(schema='mstd-mt-spatial-controls-v1', execution=execution, quick_check=args.quick_check,
@@ -144,12 +167,17 @@ def run(args):
                 texture_frames=24 if args.quick_check else 40, stimulus_seed=0,
                 comparison='baseline versus spatial-only; same V1 replay, seed and neural integration',
                 numerical_scope='finite-state checks at every integration substep; saved voltages/conductances at frame end')
+    if competition_suite:
+        plan.update(schema='mstd-mt-competition-controls-v1', variants=list(variants),
+                    mt_competition=competition.description(),
+                    comparison='four-way spatial/competition ablation with shared V1 replay, seed and integration')
     if args.plan_only:
         print(json.dumps(plan, indent=2))
         return
     stamp = datetime.now(timezone(timedelta(hours=8))).strftime('%Y%m%d_%H%M%S')
     device_tag = 'cuda' if execution['device'].startswith('cuda') else 'cpu'
-    run_id = f'{stamp}__mt_spatial_controls__py_spike_{device_tag}__sub{args.substeps:02d}__s{args.seed:04d}__r01'
+    suite_name = 'mt_competition_controls' if competition_suite else 'mt_spatial_controls'
+    run_id = f'{stamp}__{suite_name}__py_spike_{device_tag}__sub{args.substeps:02d}__s{args.seed:04d}__r01'
     output = ROOT / 'experiments/validation' / run_id
     output.mkdir(parents=True, exist_ok=False)
     dump_json(output / 'plan.json', plan)
@@ -157,10 +185,14 @@ def run(args):
                'src/mstd/model.py', 'src/mstd/monitors.py', 'src/mstd/v1.py', 'src/mstd/tensor_pipeline.py',
                'src/mstd/simulation.py', 'src/mstd/mstd.py', 'src/mstd/validity.py', 'src/mstd/readout.py',
                'configs/v1_projection.json', 'tools/run_mt_spatial_controls.py']
+    if competition_suite:
+        sources.append('tools/run_mt_competition_controls.py')
     artifact = dict(schema='mstd-artifact-v1', id=run_id, kind='validation', status='running',
                     parent_run_ids=[c['parent'] for c in cases if 'parent' in c], stimulus_ids=[], input_paths=[],
                     source_hashes={path: file_sha256(ROOT / path) for path in sources},
                     notes='Spatial-only pilot, gain is provisional; direction competition and heading feedback disabled.')
+    if competition_suite:
+        artifact['notes'] = 'Four-way spatial/competition pilot with provisional parameters.'
     dump_json(output / 'artifact.json', artifact)
     results = []
     print('OUTPUT', output.relative_to(ROOT).as_posix(), flush=True)
@@ -191,20 +223,22 @@ def run(args):
             artifact['input_paths'].append(source.relative_to(ROOT).as_posix())
             dump_json(folder / 'case.json', {k: str(v) if isinstance(v, Path) else v for k, v in case.items()})
             pair = {}
-            for variant in ('baseline', 'spatial_only'):
+            for variant in variants:
+                spatial_enabled, competition_enabled = VARIANT_SWITCHES[variant]
                 destination = folder / variant
-                replay = variant == 'spatial_only' or source_kind == 'v1_recording'
-                input_path = folder / 'baseline/monitors/v1' if variant == 'spatial_only' else source
+                replay = variant != 'baseline' or source_kind == 'v1_recording'
+                input_path = folder / 'baseline/monitors/v1' if variant != 'baseline' else source
                 settings = model_config(dict(**execution, mt_backend='python_spiking', mt_radius=0,
                     projection_config=str(ROOT / 'configs/v1_projection.json'),
                     frame_ms=case.get('frame_ms', 50), spiking=neural.description(),
-                    mt_spatial=replace(spatial, enabled=variant == 'spatial_only').description(),
+                    mt_spatial=replace(spatial, enabled=spatial_enabled).description(),
+                    mt_competition=replace(competition, enabled=competition_enabled).description(),
                     intrinsics=case.get('intrinsics'), input=dict(kind='v1_recording' if replay else 'stimulus_dat', path=str(input_path)),
                     output=str(destination), layers=dict(v1=not replay),
                     mstd_validity=dict(mode='geometry_support'), mstd_readout=dict(mode='local_quadratic'),
                     monitors=dict(v1=variant == 'baseline', spikes=False, neural_state=True), progress_every=10))
                 child_id = run_id + '__' + name + '__' + variant
-                parents = [run_id + '__' + name + '__baseline'] if variant == 'spatial_only' else ([case['parent']] if 'parent' in case else [])
+                parents = [run_id + '__' + name + '__baseline'] if variant != 'baseline' else ([case['parent']] if 'parent' in case else [])
                 child = dict(schema='mstd-artifact-v1', id=child_id, kind='validation', status='running',
                     parent_run_ids=parents, stimulus_ids=[], input_paths=[input_path.relative_to(ROOT).as_posix()],
                     input_sha256=file_sha256(input_path / 'rates.f32') if replay else source_hash,
@@ -219,7 +253,12 @@ def run(args):
                         register_run(destination, child)
                 pair[variant] = summarize(destination, case, plan['warmup_frames'])
                 results.append(dict(case=name, variant=variant, **pair[variant]))
-            pair['mt_mean_hz_change_pct'] = 100 * (pair['spatial_only']['mt_mean_hz'] / max(pair['baseline']['mt_mean_hz'], 1e-12) - 1)
+            if 'spatial_only' in pair:
+                pair['mt_mean_hz_change_pct'] = 100 * (pair['spatial_only']['mt_mean_hz'] / max(pair['baseline']['mt_mean_hz'], 1e-12) - 1)
+            if competition_suite:
+                pair['variant_rate_change_pct'] = {
+                    variant: 100 * (pair[variant]['mt_mean_hz'] / max(pair['baseline']['mt_mean_hz'], 1e-12) - 1)
+                    for variant in variants}
             pair['static_input'] = bool(case.get('static'))
             dump_json(folder / 'comparison.json', pair)
             dump_json(output / 'summary.json', results)
@@ -232,7 +271,7 @@ def run(args):
         register_run(output, artifact)
 
 
-def main():
+def parse_args(argv=None, competition=False):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--backend', choices=['numpy', 'torch'])
     parser.add_argument('--device')
@@ -243,11 +282,20 @@ def main():
     parser.add_argument('--seed', type=int, default=43)
     parser.add_argument('--gain', type=float, default=0.05)
     parser.add_argument('--radius', type=int, default=2)
-    args = parser.parse_args()
+    if competition:
+        parser.description = 'Four-way MT spatial integration and spiking direction competition controls.'
+        parser.add_argument('--competition-input-weight', type=float, default=0.25)
+        parser.add_argument('--competition-weight', type=float, default=0.2)
+        parser.add_argument('--competition-mode', choices=['angular', 'opponent'], default='angular')
+    args = parser.parse_args(argv)
     args.cases = args.cases.split(',')
     if not args.cases or any(case not in ('static', 'texture', 'kitti') for case in args.cases):
         parser.error('unsupported --cases')
-    run(args)
+    return args
+
+
+def main():
+    run(parse_args())
 
 
 if __name__ == '__main__':

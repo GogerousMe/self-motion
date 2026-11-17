@@ -12,19 +12,21 @@ V1、MT、MSTd 属于同一个模型项目，使用同一个 Python 环境。v0.
 **日常运行、层开关、监视器及直接上传文件清单见 [统一模型运行说明](docs/MODEL_RUN.md)。不要求单独的V1环境，也不需要压缩包。**
 CPU/GPU 和原 C++ V1 数值对照工具见 [Python V1 部署与验收](docs/PYTHON_V1_SERVER.md)。统一模型依赖 NumPy，GPU 使用同一环境中的 PyTorch；原 CUDA 库数值等价性与目标 GPU 性能需在服务器验收。
 
-- [完整技术方案](docs/TECHNICAL_PLAN.md)
+- [当前开发主线与验收：四阶段航向、真实视频、速度、旋转和位姿](docs/SELF_MOTION_TO_SLAM.md)
+- [四阶段神经回路设计：空间整合、方向竞争、时间竞争与航向反馈](docs/MT_MSTD_CIRCUIT_DEVELOPMENT_V01.md)
+- [真实 KITTI 航向试验与时间竞争运行说明](docs/KITTI_TEMPORAL_REAL_INPUTS_V01.md)
+- [早期技术方案](docs/TECHNICAL_PLAN.md)
 - [V1 接口协议与 C++ 接入说明](docs/V1_INTERFACE.md)
-- [开发进度与下一步](docs/DEVELOPMENT.md)
+- [历史开发记录](docs/DEVELOPMENT.md)
 - [本机实际验证记录](docs/VALIDATION.md)
 - [CARLsim 脉冲 DAT 接入](docs/CARLSIM_IMPORT.md)
 - [Linux 方向校准采集流程](docs/CALIBRATION.md)
 - [自运动刺激：前进、后退与曲线路径](docs/SELFMOTION_STIMULI.md)
-- [自运动估计到 SLAM 位姿估计的分阶段方案](docs/SELF_MOTION_TO_SLAM.md)
 - [Ubuntu 20.04 部署与连续八方向光栅 MT 测试](docs/UBUNTU20_MT_GRATING.md)
 - [输入光栅与八方向 MT 空间响应同步视频](docs/MT_RESPONSE_VIDEO.md)
 - [投影、池化、归一化三阶段 MT 对照验证](docs/MT_STAGE_VALIDATION.md)
 - [下一轮合并刺激：纹理对照、连续切换和自运动基线](docs/NEXT_STIMULUS_SEQUENCES.md)
-- [测试实验需求与实施方案](docs/EXPERIMENT_PLAN.md)
+- [早期实验设计与校准方法](docs/EXPERIMENT_PLAN.md)
 - [Python V1 迁移评估](docs/PYTHON_V1_FEASIBILITY_REVIEW.md)
 - [模型对照图](docs/model-comparison.html)
 - [MATLAB 独立方向、静态和多速度光栅](matlab/README.md)
@@ -67,6 +69,8 @@ python -m mstd run experiments/scratch/manual__demo_01__r01/recording --output e
 - 没有修改现有 C++ V1 工程；真实导出仍需确认其实际链接库与输出维度。
 
 ## 当前开发重点
+
+以[开发与验收路线](docs/SELF_MOTION_TO_SLAM.md)为准。当前扩大真实视频的水平航向验收，同时在冻结基线上开展可开关的 MSTd→MT 反馈对照。后续增加速度表征、yaw 估计及平移与旋转分离，再接入米制尺度和相对位姿。
 
 Python 是模型主体，C++ V1 作为独立数值对照。监视器保存连续率或活动，不冒充膜电位/脉冲仿真；相机内参和自运动真值验证后，才能报告航向精度。
 原始DAT、二进制实验输出与本机数据均不上传；测试使用临时生成的小型夹具。

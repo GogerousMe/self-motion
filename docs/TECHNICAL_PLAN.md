@@ -1,5 +1,7 @@
 # V1–MT–MSTd 自运动模型完整技术方案
 
+> v0.1 历史设计基线。当前模型状态、四阶段计划与位姿路线见[自运动开发与验收路线](SELF_MOTION_TO_SLAM.md)。
+
 > 2026-10-19 update: SpikeMonitor DAT import and 84-to-8 projection are implemented. See [M1 validation](M1_VALIDATION.md) and [import guide](CARLSIM_IMPORT.md). Earlier notes below describe the v0.1 milestone.
 
 日期：2026-10-18（Asia/Shanghai）

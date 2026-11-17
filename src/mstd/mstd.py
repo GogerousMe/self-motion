@@ -2,6 +2,7 @@
 
 from dataclasses import dataclass
 from math import atan, degrees, hypot, isfinite, radians, tan
+from numbers import Real
 
 from .validity import ValidityConfig, decide_validity
 from .readout import ReadoutConfig, heading_readout
@@ -19,7 +20,7 @@ class DynamicsConfig:
 
     def __post_init__(self):
         values = tuple(self.__dict__.values())
-        if any(not isfinite(v) or v < 0 for v in values):
+        if any(isinstance(v, bool) or not isinstance(v, Real) or not isfinite(v) or v < 0 for v in values):
             raise ValueError("dynamics parameters must be finite and nonnegative")
         if self.tau_s <= 0 or not 0 < self.max_step_s <= self.tau_s / 4:
             raise ValueError("integration step must be positive and <= tau/4")

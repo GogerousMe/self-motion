@@ -4,14 +4,21 @@ import numpy as np
 
 from .neural import (SpikeConfig,DelayLine,PoissonEncoder,ExpConductance,
                      IzhikevichPopulation,nonnegative,finite)
-from .mt_circuit import SpatialConfig, SpatialExcitation
+from .mt_circuit import SpatialConfig, SpatialExcitation, CompetitionConfig, DirectionCompetition
 
 
 class PythonSpikingMT:
-    def __init__(self,op,projection,width,height,config=None,population_order=('exc','inh'),spatial_config=None):
+    def __init__(self,op,projection,width,height,config=None,population_order=('exc','inh'),spatial_config=None,competition_config=None):
         self.op,self.projection=op,projection
         self.config=config or SpikeConfig()
-        if len(population_order)!=2 or set(population_order)!={'exc','inh'}:raise ValueError('each MT population must update exactly once')
+        self.competition_config = competition_config or CompetitionConfig()
+        required = {'exc', 'inh'}
+        if self.competition_config.enabled:
+            required.add('competition')
+            if len(population_order) == 2:
+                population_order = (*population_order, 'competition')
+        if len(population_order) != len(required) or set(population_order) != required:
+            raise ValueError('each MT population must update exactly once')
         self.population_order=tuple(population_order)
         self.shape=(8,height,width)
         self.input_shape=(3,28,height,width)
@@ -32,12 +39,16 @@ class PythonSpikingMT:
         self.spatial_config = spatial_config or SpatialConfig()
         self.spatial = (SpatialExcitation(op, projection.directions_rad, width, height, self.spatial_config)
                         if self.spatial_config.enabled and self.spatial_config.gain > 0 else None)
+        self.competition = (DirectionCompetition(op, projection.directions_rad, width, height, self.competition_config)
+                            if self.competition_config.enabled else None)
         self.reset()
 
     def reset(self):
         for part in (self.encoder,self.exc,self.inh,self.ge,self.gi,self.drive_i,self.feedback_ge,self.feedback_gi,self.input_delay,self.inhib_delay):part.reset()
         if self.spatial:
             self.spatial.reset()
+        if self.competition:
+            self.competition.reset()
         self.trace=self.op.zeros(self.shape)
         self.zero=self.op.zeros(self.shape)
         self.rates=None
@@ -71,9 +82,15 @@ class PythonSpikingMT:
         exc_conductance = ge + feedback_ge
         if self.spatial:
             exc_conductance = exc_conductance + self.spatial.arrive(cfg.dt_ms)
+        inh_conductance = gi + feedback_gi
+        if self.competition:
+            competition_exc, competition_inh = self.competition.arrive(cfg.dt_ms)
+            inh_conductance = inh_conductance + competition_inh
         kwargs=dict(dt_ms=cfg.dt_ms,substeps=cfg.substeps,reversal_exc=cfg.reversal_exc,reversal_inh=cfg.reversal_inh)
-        inputs={'exc':(self.exc,exc_conductance,gi+feedback_gi,feedback[0]),
+        inputs={'exc':(self.exc,exc_conductance,inh_conductance,feedback[0]),
                 'inh':(self.inh,drive_i,self.zero,feedback[1])}
+        if self.competition:
+            inputs['competition'] = (self.competition.population, competition_exc, self.zero, self.zero)
         emitted={}
         for name in self.population_order:
             population,g_exc,g_inh,external=inputs[name]
@@ -86,10 +103,15 @@ class PythonSpikingMT:
         self.inhib_delay.write(inh)
         if self.spatial:
             self.spatial.emit(exc)
+        if self.competition:
+            self.competition.emit(exc, emitted['competition'])
         decay=exp(-cfg.dt_ms/cfg.trace_tau_ms)
         self.trace=self.trace*decay+exc*((1-decay)*1000/cfg.dt_ms)
         self.ticks+=1
-        return {'v1':events,'exc':exc,'inh':inh}
+        result = {'v1':events,'exc':exc,'inh':inh}
+        if self.competition:
+            result['competition'] = emitted['competition']
+        return result
 
     def readout(self,host_evidence=True):
         op=self.op
@@ -111,4 +133,11 @@ class PythonSpikingMT:
             spatial = self.spatial.synapse.g if self.spatial else self.zero
             values['spatial_exc_conductance'] = spatial
             values['exc_conductance'] = values['exc_conductance'] + spatial
+        if self.competition:
+            circuit = self.competition
+            values.update(competition_voltage=circuit.population.v,
+                          competition_recovery=circuit.population.u,
+                          competition_exc_conductance=circuit.exc_synapse.g,
+                          competition_inh_conductance=circuit.inh_synapse.g)
+            values['inh_conductance'] = values['inh_conductance'] + circuit.inh_synapse.g
         return {name:self.op.copy(value) for name,value in values.items()}
